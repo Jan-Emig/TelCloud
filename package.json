@@ -1,0 +1,28 @@
+{
+  "name": "telcloud",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "npm run build",
+    "build": "webpack --watch --config ./webpack.config.js",
+    "app-start": "electron ./dist/js/app.js"
+  },
+  "author": "Jan-Emig",
+  "license": "SEE LICENSE IN <license.md>",
+  "devDependencies": {
+    "@types/react": "^17.0.42",
+    "@types/react-dom": "^17.0.14",
+    "copy-webpack-plugin": "^10.2.4",
+    "electron": "^17.1.2",
+    "html-webpack-plugin": "^5.5.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "ts-loader": "^9.2.8",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^1.8.6"
+  }
+}
