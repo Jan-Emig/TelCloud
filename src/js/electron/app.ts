@@ -29,18 +29,4 @@ app.on('ready', () => {
         const win = BrowserWindow.fromWebContents(webContents);
         win?.close();
     })
-
-    // ipcMain.on('ajax-ipc', async (event: any, ...args: any[]) => {
-    //     const promise = new Promise((resolve, reject) => {
-    //         axios.post(buildRequestUrl('api/signin'))
-    //         .then((res: AxiosResponse) => {
-    //             console.log(res.data);
-    //             event.reply(res.data);
-    //         })
-    //         .catch ((err: AxiosError) => {
-    //             console.log(err.message);
-    //         })
-    //     })
-    //     return promise;
-    // })
 });

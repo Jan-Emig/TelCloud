@@ -2,13 +2,13 @@ import { Box, Button, Center, ChakraProvider, FormControl, FormErrorMessage, Hea
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { FC, FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Helper } from './helpers/helper';
+import { Helper } from '../helpers/helper';
 
 const SignIn: FC = () => {
     const [isSigningIn, setIsSigningIn] = useState<boolean>(false);
-    const [isUserIdError, setIsUserIdError] = useState<boolean>(false);
-    const [userIdErrorMessage, setUserIdErrorMessage] = useState<string>('User id is required.');
-    const [userId, setUserId] = useState<string>('');
+    const [isUsernameError, setIsUsernameError] = useState<boolean>(false);
+    const [usernameErrorMessage, setUsernameErrorMessage] = useState<string>('User id is required.');
+    const [username, setUsername] = useState<string>('');
     const [isPasswordError, setIsPasswordError] = useState<boolean>(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('Password is required.');
     const [password, setPassword] = useState<string>('');
@@ -16,6 +16,7 @@ const SignIn: FC = () => {
     const [heartCounter, setHeartCounter] = useState<number>(0);
     const [hasSignInFailed, setHasSignInFailed] = useState<boolean>(false);
     const [isButtonDisabled, setisButtonDisabled] = useState<boolean>(false);
+    const [isNetworkError, setIsNetworkError] = useState<boolean>(false);
 
     useEffect(() => {
         if (heartCounter != 0 && heartCounter % 5 === 0) {
@@ -34,12 +35,12 @@ const SignIn: FC = () => {
             } else setIsPasswordError(false);
             setPassword(value);
         }
-        else if (input_field === 'user-id') {
+        else if (input_field === 'username') {
             if (!value) {
-                setUserIdErrorMessage('User id is required.');
-                setIsUserIdError(true);
-            } else setIsUserIdError(false);
-            setUserId(value);
+                setUsernameErrorMessage('User id is required.');
+                setIsUsernameError(true);
+            } else setIsUsernameError(false);
+            setUsername(value);
         }
     }
 
@@ -52,12 +53,12 @@ const SignIn: FC = () => {
     }
 
     const signIn = async () => {
-        if (!isSigningIn && hasInputChanged && !isPasswordError && !isUserIdError && password && userId) {
+        if (!isSigningIn && hasInputChanged && !isPasswordError && !isUsernameError && password && username) {
             setIsSigningIn(true);
             setisButtonDisabled(true);
             if (hasSignInFailed) setHasSignInFailed(false);
 
-            axios.post(Helper.buildRequestUrl('signin'), { userId, password})
+            axios.post(Helper.buildRequestUrl('signin'), { username, password})
             .then((res: AxiosResponse) => {
                 window.api.signIn();
             })
@@ -68,7 +69,10 @@ const SignIn: FC = () => {
                 setPassword('');
                 setIsPasswordError(true);
                 
+                console.log(err.message);
                 if (response) {
+                    if (isNetworkError) setIsNetworkError(false);
+                    console.log(response.data);
                     if (response.status === 401) {
                         if (response.data === 'wrong-password') {
                             // setIsPasswordError(true);
@@ -77,17 +81,17 @@ const SignIn: FC = () => {
                     }
                     else if (response.status == 404) {
                         if (response.data === 'no-user') {
-                            setIsUserIdError(true);
-                            setUserIdErrorMessage('🧐 What?! We could\'nt find any user with this id!');
+                            setIsUsernameError(true);
+                            setUsernameErrorMessage('🧐 What?! We couldn\'t find any user with this name!');
                         } else setHasSignInFailed(true);
                     }
                     else if (response.status === 400) {
                         // Show server error message for each field, caused by invalid input values
                         // which should have been checked and reported by the client before the request
                         try {
-                            if (response.data['userId']) {
-                                setIsUserIdError(true);
-                                setUserIdErrorMessage(response.data['userId']);
+                            if (response.data['username']) {
+                                setIsUsernameError(true);
+                                setUsernameErrorMessage(response.data['username']);
                             }
                             if (response.data['password']) {
                                 // setIsPasswordError(true);
@@ -96,6 +100,12 @@ const SignIn: FC = () => {
                         } catch (error: any) { setHasSignInFailed(true); }
 
                     } else setHasSignInFailed(true);
+                } else {
+                    if (err.message === 'Network Error') setIsNetworkError(true);
+                    else {
+                        setHasSignInFailed(true);
+                        if (isNetworkError) setIsNetworkError(false);
+                    }
                 }
                 setIsSigningIn(false);
                 setTimeout(() => setisButtonDisabled(false), 2000);
@@ -103,7 +113,7 @@ const SignIn: FC = () => {
             
         }
         else {
-            if (!userId) setIsUserIdError(true);
+            if (!username) setIsUsernameError(true);
             if (!password) setIsPasswordError(true);
         }
     }
@@ -122,15 +132,15 @@ const SignIn: FC = () => {
                 </Box>
                 <Center>
                     <Box mt="50px" width="75%">
-                        <FormControl isRequired isInvalid={isUserIdError}>
+                        <FormControl isRequired isInvalid={isUsernameError}>
                             <Input 
-                                id="user-id"
+                                id="username"
                                 type="text"
-                                placeholder="User ID"
-                                onChange={(e) => handleInputChange(e, 'user-id')} 
+                                placeholder="Username"
+                                onChange={(e) => handleInputChange(e, 'username')} 
                                 onKeyDown={handleInputKeyDown}
                             />
-                            <FormErrorMessage>{ userIdErrorMessage }</FormErrorMessage>
+                            <FormErrorMessage>{ usernameErrorMessage }</FormErrorMessage>
                         </FormControl>
                         <FormControl isRequired isInvalid={isPasswordError} mt="20px">
                             <Input 
@@ -153,6 +163,15 @@ const SignIn: FC = () => {
                                 onClick={signIn}
                             >Ready to go!</Button>
                         </Center>
+                        <Text
+                            width="75%"
+                            fontSize="sm"
+                            align="center"
+                            mt="5px"
+                            ml="12.5%"
+                            color="red.500"
+                            display={(isNetworkError) ? 'block' : 'none'}
+                        >Hmm, we couldn't establish a secure connection to our server 🔌 Is your internet up & running?</Text>
                         <Text
                             width="75%"
                             fontSize="sm"

@@ -4,8 +4,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 module.exports = [
     {
         entry: {
-            app: './src/js/electron.ts',
-            sign_in: './src/js/sign_in.tsx',
+            app: './src/js/electron/app.ts',
+            sign_in: './src/js/renderer/sign_in.tsx',
             sign_in_preload: './src/js/preloaders/sign_in_preload.ts',
             zeta: './src/js/zeta.tsx',
         },

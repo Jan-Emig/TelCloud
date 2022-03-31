@@ -1,5 +1,4 @@
 import { Constants } from "./constants";
-import axios from "axios";
 
 export class Helper {
 
