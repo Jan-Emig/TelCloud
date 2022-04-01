@@ -1,22 +1,38 @@
-import { Box, Button, Center, ChakraProvider, FormControl, FormErrorMessage, Heading, Image, Input, Link, Text } from '@chakra-ui/react';
+import { Alert, AlertIcon, Box, BoxProps, Button, Center, chakra, ChakraProvider, FormControl, FormErrorMessage, Heading, Image, Input, InputGroup, InputRightElement, Link, Text } from '@chakra-ui/react';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { FC, FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import NetworkErrorDialog from '../comps/network_error_dialog';
 import { Helper } from '../helpers/helper';
 
+import { motion } from 'framer-motion';
+import MotionAlert from '../comps/motion_box';
+
+// const MotionBox = chakra(motion.div);
+
+
+/**
+ * 
+ * Main overlay for signing into the main app
+ * 
+ */
 const SignIn: FC = () => {
     const [isSigningIn, setIsSigningIn] = useState<boolean>(false);
+    const [username, setUsername] = useState<string>('');
     const [isUsernameError, setIsUsernameError] = useState<boolean>(false);
     const [usernameErrorMessage, setUsernameErrorMessage] = useState<string>('User id is required.');
-    const [username, setUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
     const [isPasswordError, setIsPasswordError] = useState<boolean>(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('Password is required.');
-    const [password, setPassword] = useState<string>('');
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const [hasInputChanged, setHasInputChanged] = useState<boolean>(false);
     const [heartCounter, setHeartCounter] = useState<number>(0);
     const [hasSignInFailed, setHasSignInFailed] = useState<boolean>(false);
+    const [isSignInLimited, setisSignInLimited] = useState<boolean>(false);
     const [isButtonDisabled, setisButtonDisabled] = useState<boolean>(false);
     const [isNetworkError, setIsNetworkError] = useState<boolean>(false);
+    const [isNetworkErrorDialogRequested, setIsNetworkErrorDialogRequested] = useState<boolean>(false);
+    const [hasReconnected, setHasReconnected] = useState<boolean>(false);
 
     useEffect(() => {
         if (heartCounter != 0 && heartCounter % 5 === 0) {
@@ -60,7 +76,7 @@ const SignIn: FC = () => {
 
             axios.post(Helper.buildRequestUrl('signin'), { username, password})
             .then((res: AxiosResponse) => {
-                window.api.signIn();
+                if (!res.data) window.api.signIn();
             })
             .catch((err: AxiosError) => {
                 const response = err.response;
@@ -99,6 +115,8 @@ const SignIn: FC = () => {
                             }
                         } catch (error: any) { setHasSignInFailed(true); }
 
+                    } else if (response.status === 429) {
+                        setisSignInLimited(true);
                     } else setHasSignInFailed(true);
                 } else {
                     if (err.message === 'Network Error') setIsNetworkError(true);
@@ -143,13 +161,25 @@ const SignIn: FC = () => {
                             <FormErrorMessage>{ usernameErrorMessage }</FormErrorMessage>
                         </FormControl>
                         <FormControl isRequired isInvalid={isPasswordError} mt="20px">
-                            <Input 
-                                id="password"
-                                type="password"
-                                placeholder="Password"
-                                onChange={(e) => handleInputChange(e, 'password')}
-                                onKeyDown={handleInputKeyDown}
-                            />
+                            <InputGroup>
+                                <Input 
+                                    id="password"
+                                    type={(showPassword) ? 'text' : "password"}
+                                    placeholder="Password"
+                                    onChange={(e) => handleInputChange(e, 'password')}
+                                    onKeyDown={handleInputKeyDown}
+                                />
+                                <InputRightElement>
+                                    <Button onClick={() => setShowPassword(!showPassword)}>
+                                        {
+                                            showPassword
+                                            ? <Image src="./assets/visibility_on_black.png" alt="Open eyes" width="25px" height="25px" maxWidth="none"></Image>
+                                            : <Image src="./assets/visibility_off_black.png" alt="Open eyes" width="25px" height="25px" maxWidth="none"></Image>
+                                        }
+                                        
+                                    </Button>
+                                </InputRightElement>
+                            </InputGroup>
                             <FormErrorMessage>{ passwordErrorMessage }</FormErrorMessage>
                         </FormControl>
                         <Center>
@@ -180,13 +210,23 @@ const SignIn: FC = () => {
                             ml="12.5%"
                             color="red.500"
                             display={(hasSignInFailed) ? 'block' : 'none'}
-                        >Oh no 😥 Something went wrong while signing you in. Please try again, we’ll do better next time 😊 !</Text>
+                        >Oh no 😥 Something went wrong while signing you in. Please try again, we'll do better next time 😊 !</Text>
+                        <Text
+                            width="75%"
+                            fontSize="sm"
+                            align="center"
+                            mt="5px"
+                            ml="12.5%"
+                            color="red.500"
+                            display={(isSignInLimited) ? 'block' : 'none'}
+                        >That was hot 🔥! Please wait a moment until you try signing in again. We’ll extinguish the button in the meantime...</Text>
                         <Text 
                             fontSize="sm"
                             align="center"
                             mt="10px"
                             opacity="60%"
                             transition="all .15s ease"
+                            color="gray.800"
                             _hover={{ opacity: '100%' }}
                         >
                             No account yet? <Link>Create one now</Link>.
@@ -198,11 +238,24 @@ const SignIn: FC = () => {
                         size="xs"
                         opacity="30%"
                         userSelect="none"
+                        transition="all .15s ease"
                         _hover={{ opacity: '100%' }}
                     >
                         Made with <Text display="inline" onClick={() => setHeartCounter(heartCounter + 1)}>💙</Text>&nbsp;&nbsp;by <Link href="https://github.com/Jan-Emig" isExternal>Jan-Emig</Link>
                     </Heading>
                 </Center>
+                { 
+                    isNetworkErrorDialogRequested && <NetworkErrorDialog setHasReconnected={setHasReconnected} />
+                }
+                { 
+                    hasReconnected &&
+                        <MotionAlert 
+                            alertType='success'
+                            alertMessage='Successfully reconnected. Fire on!' 
+                            width='330px'
+                            setShowElement={setHasReconnected}
+                        /> 
+                }
             </ChakraProvider>
         )
     }
@@ -213,4 +266,4 @@ const SignIn: FC = () => {
 ReactDOM.render(
     <SignIn />,
     document.getElementById('app')
-);
+);  

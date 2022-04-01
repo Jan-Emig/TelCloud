@@ -6,8 +6,8 @@ const path = require('path');
 
 app.on('ready', () => {
     let sign_in_win = new BrowserWindow({
-        width: 430,
-        height: 541,
+        width: 470,
+        height: 580,
         minWidth: 350,
         webPreferences: {
             nodeIntegration: true,
