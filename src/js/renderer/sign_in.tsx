@@ -74,7 +74,8 @@ const SignIn: FC = () => {
     const signIn = async () => {
         if (!isSigningIn && hasInputChanged && !isPasswordError && !isUsernameError && password && username) {
 
-            if (!navigator.onLine || true) {
+            if (!navigator.onLine) {
+                // Abort process if no active internet connection could be detected
                 setIsNetworkErrorDialogRequested(true);
                 return;
             }
@@ -98,7 +99,6 @@ const SignIn: FC = () => {
                     if (isNetworkError) setIsNetworkError(false);
                     if (response.status === 401) {
                         if (response.data === 'wrong-password') {
-                            // setIsPasswordError(true);
                             setPasswordErrorMessage('😶 Something appears to be odd with that password...Maybe a typo?');
                         } else setHasSignInFailed(true);
                     }
@@ -117,7 +117,6 @@ const SignIn: FC = () => {
                                 setUsernameErrorMessage(response.data['username']);
                             }
                             if (response.data['password']) {
-                                // setIsPasswordError(true);
                                 setPasswordErrorMessage(response.data['password']);
                             }
                         } catch (error: any) { setHasSignInFailed(true); }
