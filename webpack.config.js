@@ -32,7 +32,7 @@ module.exports = [
         plugins: [
             new CopyPlugin({
                 patterns: [
-                    { from: './src/*.html', to: '../[name].html'},
+                    { from: './src/html/*.html', to: '../[name].html'},
                     { from: './src/assets/*', to: '../assets/[name][ext]'}
                 ]
             })
