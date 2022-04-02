@@ -6,7 +6,8 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Helper } from '../helpers/helper';
 
 interface INetworkErrorDialog {
-    setHasReconnected: Dispatch<SetStateAction<boolean>>
+    setHasReconnected: Dispatch<SetStateAction<boolean>>,
+    setIsNetworkErrorDialogRequested: Dispatch<SetStateAction<boolean>>
 }
 
 /**
@@ -14,7 +15,7 @@ interface INetworkErrorDialog {
  * React component for notifying the user
  * about the network connection failure (no internet connection)
  */
-const NetworkErrorDialog: FC<INetworkErrorDialog> = ({ setHasReconnected }) => {
+const NetworkErrorDialog: FC<INetworkErrorDialog> = ({ setHasReconnected, setIsNetworkErrorDialogRequested }) => {
     const {isOpen, onOpen, onClose } = useDisclosure();
     const [isReconnectDisabled, setIsReconnectDisabled] = useState<boolean>(false);
     const [isReconnecting, setIsReconnecting] = useState<boolean>(false);
@@ -25,7 +26,7 @@ const NetworkErrorDialog: FC<INetworkErrorDialog> = ({ setHasReconnected }) => {
         onOpen();
     }, [])
 
-    const reconnect = async() => {
+    const reconnect = () => {
         setIsReconnectDisabled(true);
         setIsReconnecting(true);
 
@@ -49,8 +50,10 @@ const NetworkErrorDialog: FC<INetworkErrorDialog> = ({ setHasReconnected }) => {
                 .then((res: AxiosResponse) => {
                     if (res.data === 'pong') {
                         idx = max_attempts + 1;
-                        setHasReconnected(true);
                         onClose();
+                        setTimeout(() => setIsNetworkErrorDialogRequested(false), 1000);
+                        setHasReconnected(true);
+                        clearInterval(reconnect_interval);
                     }
                 })
                 .catch((err: AxiosError) => {
