@@ -8,6 +8,7 @@ module.exports = [
             sign_in: './src/js/renderer/sign_in.tsx',
             sign_in_preload: './src/js/preloaders/sign_in_preload.ts',
             zeta: './src/js/zeta.tsx',
+            no_connection: './src/js/renderer/no_connection.tsx'
         },
         mode: 'development',
         target: 'electron-main',
