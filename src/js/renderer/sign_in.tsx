@@ -1,14 +1,13 @@
-import { Alert, AlertIcon, Box, BoxProps, Button, Center, chakra, ChakraProvider, FormControl, FormErrorMessage, Heading, Image, Input, InputGroup, InputRightElement, Link, Text } from '@chakra-ui/react';
+import { Box, Button, Center, ChakraProvider, FormControl, FormErrorMessage, Heading, Image, Input, InputGroup, InputRightElement, Link, Text } from '@chakra-ui/react';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { FC, FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import NetworkErrorDialog from '../comps/network_error_dialog';
 import { Helper } from '../helpers/helper';
+import MotionAlert from '../comps/motion_alert';
+import Lottie from 'react-lottie-player';
 
-import { motion } from 'framer-motion';
-import MotionAlert from '../comps/motion_box';
-
-// const MotionBox = chakra(motion.div);
+import * as load_balancer_animation from '../../json/load-balancer_lottie.json';
 
 
 /**
@@ -40,6 +39,10 @@ const SignIn: FC = () => {
         }
     }, [heartCounter, setHeartCounter])
 
+    // useEffect(() => {
+    //     setIsNetworkErrorDialogRequested(false);
+    // }, [hasReconnected, setHasReconnected])
+
     const handleInputChange = (e: FormEvent<HTMLInputElement>, input_field: string) => {
         const value = e.currentTarget.value.trim();
         if (!hasInputChanged) setHasInputChanged(true);
@@ -70,6 +73,12 @@ const SignIn: FC = () => {
 
     const signIn = async () => {
         if (!isSigningIn && hasInputChanged && !isPasswordError && !isUsernameError && password && username) {
+
+            if (!navigator.onLine || true) {
+                setIsNetworkErrorDialogRequested(true);
+                return;
+            }
+
             setIsSigningIn(true);
             setisButtonDisabled(true);
             if (hasSignInFailed) setHasSignInFailed(false);
@@ -85,10 +94,8 @@ const SignIn: FC = () => {
                 setPassword('');
                 setIsPasswordError(true);
                 
-                console.log(err.message);
                 if (response) {
                     if (isNetworkError) setIsNetworkError(false);
-                    console.log(response.data);
                     if (response.status === 401) {
                         if (response.data === 'wrong-password') {
                             // setIsPasswordError(true);
@@ -173,8 +180,8 @@ const SignIn: FC = () => {
                                     <Button onClick={() => setShowPassword(!showPassword)}>
                                         {
                                             showPassword
-                                            ? <Image src="./assets/visibility_on_black.png" alt="Open eyes" width="25px" height="25px" maxWidth="none"></Image>
-                                            : <Image src="./assets/visibility_off_black.png" alt="Open eyes" width="25px" height="25px" maxWidth="none"></Image>
+                                            ? <Image src="./assets/visibility_on_black.png" alt="Open eyes" width="25px" height="25px" maxWidth="none" />
+                                            : <Image src="./assets/visibility_off_black.png" alt="Open eyes" width="25px" height="25px" maxWidth="none" />
                                         }
                                         
                                     </Button>
@@ -186,7 +193,9 @@ const SignIn: FC = () => {
                             <Button
                                 colorScheme="blue"
                                 mt="40px"
-                                leftIcon={<Image src="./assets/login.svg" boxSize="20px" />}
+                                leftIcon={
+                                    <Image src="./assets/login.svg" alt="Log In symbole" boxSize="25px" />
+                                }
                                 loadingText="Searching for the light..."
                                 isDisabled={isButtonDisabled}
                                 isLoading={isSigningIn}
@@ -245,7 +254,7 @@ const SignIn: FC = () => {
                     </Heading>
                 </Center>
                 { 
-                    isNetworkErrorDialogRequested && <NetworkErrorDialog setHasReconnected={setHasReconnected} />
+                    isNetworkErrorDialogRequested && <NetworkErrorDialog setHasReconnected={setHasReconnected} setIsNetworkErrorDialogRequested={setIsNetworkErrorDialogRequested} />
                 }
                 { 
                     hasReconnected &&
