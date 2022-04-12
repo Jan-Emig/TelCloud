@@ -1,4 +1,5 @@
 import { BrowserWindow, ipcMain, IpcMainEvent, shell } from "electron";
+import AuthService from "./services/auth";
 const path = require('path');
 
 const sign_in_window = () => {
@@ -21,10 +22,15 @@ const sign_in_window = () => {
         return { action: 'allow' };
     })
 
-    ipcMain.on('sign-in', async(event: IpcMainEvent, ... args: any[]) => {
+    ipcMain.on('sign-in', async(event: IpcMainEvent, token: string) => {
+        if (token) AuthService.setSessionToken(token);
         const webContents = event.sender;
         const win = BrowserWindow.fromWebContents(webContents);
         win?.close();
+    })
+
+    ipcMain.on('set-session-token', async(event: IpcMainEvent, token: string) => {
+        AuthService.setSessionToken(token);
     })
 }
 
