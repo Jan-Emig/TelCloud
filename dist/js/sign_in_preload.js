@@ -447,7 +447,7 @@ eval("\nconst os = __webpack_require__(/*! os */ \"os\");\nconst tty = __webpack
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar axios_1 = __importDefault(__webpack_require__(/*! axios */ \"./node_modules/axios/index.js\"));\nvar crypto_1 = __webpack_require__(/*! crypto */ \"crypto\");\nvar helper_1 = __webpack_require__(/*! ../../helpers/helper */ \"./src/js/helpers/helper.ts\");\n//TODO: Remove hardcoded params and request them fromt he responsible source (db or encrypted file)\nvar app_uuid = '50ebb47e-8025-40bf-a3fb-b91da2554ba5';\nvar s_token = '';\nvar AuthService = /** @class */ (function () {\n    function AuthService() {\n    }\n    AuthService.checkAuthentication = function () {\n        axios_1.default.get(helper_1.Helper.buildRequestUrl('auth-check'), { params: { app_uuid: this.getAppUuid() } })\n            .then(function (res) {\n            if (res.status === 200 && res.data.length) {\n                return res.data;\n            }\n        })\n            .catch();\n        return false;\n    };\n    AuthService.setAppUuid = function () {\n        app_uuid = (0, crypto_1.randomUUID)();\n    };\n    AuthService.getAppUuid = function () {\n        //TODO: Outsoure data to database or encrypted file\n        return app_uuid;\n    };\n    AuthService.setSessionToken = function (token) {\n        //TODO: outsource session token to database or encrypted file\n        token = token.trim();\n        try {\n            if (token.length === 64) {\n                s_token = token;\n                return true;\n            }\n        }\n        catch (Exception) { }\n        return false;\n    };\n    AuthService.getSessionToken = function () {\n        return s_token;\n    };\n    return AuthService;\n}());\nexports[\"default\"] = AuthService;\n\n\n//# sourceURL=webpack://telcloud/./src/js/electron/services/auth.ts?");
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar axios_1 = __importDefault(__webpack_require__(/*! axios */ \"./node_modules/axios/index.js\"));\nvar fs_1 = __importDefault(__webpack_require__(/*! fs */ \"fs\"));\nvar crypto_1 = __webpack_require__(/*! crypto */ \"crypto\");\nvar helper_1 = __webpack_require__(/*! ../../helpers/helper */ \"./src/js/helpers/helper.ts\");\nvar electron_1 = __webpack_require__(/*! electron */ \"electron\");\n//TODO: Remove hardcoded params and request them fromt he responsible source (db or encrypted file)\nvar app_uuid = '50ebb47e-8025-40bf-a3fb-b91da2554ba5';\nvar s_token = '';\nvar AuthService = /** @class */ (function () {\n    function AuthService() {\n    }\n    AuthService.checkAuthentication = function () {\n        axios_1.default.get(helper_1.Helper.buildRequestUrl('auth-check'), { params: { app_uuid: this.getAppUuid() } })\n            .then(function (res) {\n            if (res.status === 200 && res.data.length) {\n                return res.data;\n            }\n        })\n            .catch();\n        return false;\n    };\n    AuthService.setAppUuid = function () {\n        app_uuid = (0, crypto_1.randomUUID)();\n    };\n    AuthService.getAppUuid = function () {\n        //TODO: Outsoure data to database or encrypted file\n        return app_uuid;\n    };\n    AuthService.setSessionToken = function (token) {\n        var _this = this;\n        //TODO: outsource session token to database or encrypted file\n        token = token.trim();\n        try {\n            if (token.length === 64) {\n                s_token = token;\n                var cred_path_1 = electron_1.app.getPath('userData') + '/cred.json';\n                fs_1.default.readFile(cred_path_1, 'utf8', function (err, data) {\n                    var cred_data = { s_token: '', app: '', uname: '' };\n                    if (err && err.code === 'ENOENT')\n                        cred_data.app = _this.getAppUuid(); // Create new cred file if it doesn't exist'\n                    else if (err)\n                        throw err;\n                    else\n                        cred_data = JSON.parse(data);\n                    cred_data.s_token = s_token;\n                    fs_1.default.writeFile(cred_path_1, JSON.stringify(cred_data), function (err) { if (err)\n                        throw err; });\n                });\n                return true;\n            }\n        }\n        catch (e) {\n            console.log(e);\n        }\n        return false;\n    };\n    AuthService.getSessionToken = function () {\n        return s_token;\n    };\n    return AuthService;\n}());\nexports[\"default\"] = AuthService;\n\n\n//# sourceURL=webpack://telcloud/./src/js/electron/services/auth.ts?");
 
 /***/ }),
 
@@ -514,6 +514,17 @@ module.exports = require("crypto");
 
 "use strict";
 module.exports = require("electron");
+
+/***/ }),
+
+/***/ "fs":
+/*!*********************!*\
+  !*** external "fs" ***!
+  \*********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("fs");
 
 /***/ }),
 
