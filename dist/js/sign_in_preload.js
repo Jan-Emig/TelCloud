@@ -440,14 +440,14 @@ eval("\nconst os = __webpack_require__(/*! os */ \"os\");\nconst tty = __webpack
 
 /***/ }),
 
-/***/ "./src/js/electron/auth.ts":
-/*!*********************************!*\
-  !*** ./src/js/electron/auth.ts ***!
-  \*********************************/
+/***/ "./src/js/electron/services/auth.ts":
+/*!******************************************!*\
+  !*** ./src/js/electron/services/auth.ts ***!
+  \******************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar axios_1 = __importDefault(__webpack_require__(/*! axios */ \"./node_modules/axios/index.js\"));\nvar helper_1 = __webpack_require__(/*! ../helpers/helper */ \"./src/js/helpers/helper.ts\");\nvar Auth = /** @class */ (function () {\n    function Auth() {\n    }\n    Auth.checkAuthentication = function () {\n        // OLD AUTHENTICATION CHECK\n        // axios.get(Helper.buildRequestUrl('auth-check'))\n        // .then((res: AxiosResponse) => {\n        //     if (res.status === 200 && res.data.length == 'OK') return true;\n        // })\n        // .catch();\n        // return false;\n        axios_1.default.get(helper_1.Helper.buildRequestUrl('auth-check'), { params: { app_uuid: this.getAppUuid() } })\n            .then(function (res) {\n            if (res.status === 200 && res.data.length) {\n                return res.data;\n            }\n        })\n            .catch();\n        return false;\n    };\n    Auth.getAppUuid = function () {\n        //TODO: Outsoure data to database or encrypted file\n        var app_uuid = '50ebb47e-8025-40bf-a3fb-b91da2554ba5';\n        return app_uuid;\n    };\n    return Auth;\n}());\nexports[\"default\"] = Auth;\n\n\n//# sourceURL=webpack://telcloud/./src/js/electron/auth.ts?");
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar axios_1 = __importDefault(__webpack_require__(/*! axios */ \"./node_modules/axios/index.js\"));\nvar crypto_1 = __webpack_require__(/*! crypto */ \"crypto\");\nvar helper_1 = __webpack_require__(/*! ../../helpers/helper */ \"./src/js/helpers/helper.ts\");\n//TODO: Remove hardcoded params and request them fromt he responsible source (db or encrypted file)\nvar app_uuid = '50ebb47e-8025-40bf-a3fb-b91da2554ba5';\nvar s_token = '';\nvar AuthService = /** @class */ (function () {\n    function AuthService() {\n    }\n    AuthService.checkAuthentication = function () {\n        axios_1.default.get(helper_1.Helper.buildRequestUrl('auth-check'), { params: { app_uuid: this.getAppUuid() } })\n            .then(function (res) {\n            if (res.status === 200 && res.data.length) {\n                return res.data;\n            }\n        })\n            .catch();\n        return false;\n    };\n    AuthService.setAppUuid = function () {\n        app_uuid = (0, crypto_1.randomUUID)();\n    };\n    AuthService.getAppUuid = function () {\n        //TODO: Outsoure data to database or encrypted file\n        return app_uuid;\n    };\n    AuthService.setSessionToken = function (token) {\n        //TODO: outsource session token to database or encrypted file\n        token = token.trim();\n        try {\n            if (token.length === 64) {\n                s_token = token;\n                return true;\n            }\n        }\n        catch (Exception) { }\n        return false;\n    };\n    AuthService.getSessionToken = function () {\n        return s_token;\n    };\n    return AuthService;\n}());\nexports[\"default\"] = AuthService;\n\n\n//# sourceURL=webpack://telcloud/./src/js/electron/services/auth.ts?");
 
 /***/ }),
 
@@ -480,7 +480,7 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar electron_1 = __webpack_require__(/*! electron */ \"electron\");\nvar auth_1 = __importDefault(__webpack_require__(/*! ../electron/auth */ \"./src/js/electron/auth.ts\"));\nelectron_1.contextBridge.exposeInMainWorld('api', {\n    signIn: function () { return electron_1.ipcRenderer.send('sign-in'); },\n    getAppUuid: auth_1.default.getAppUuid,\n});\n\n\n//# sourceURL=webpack://telcloud/./src/js/preloaders/sign_in_preload.ts?");
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar electron_1 = __webpack_require__(/*! electron */ \"electron\");\nvar auth_1 = __importDefault(__webpack_require__(/*! ../electron/services/auth */ \"./src/js/electron/services/auth.ts\"));\nelectron_1.contextBridge.exposeInMainWorld('api', {\n    signIn: function (token) { return electron_1.ipcRenderer.send('sign-in', token); },\n    getAppUuid: auth_1.default.getAppUuid,\n    setSessionToken: function (token) { return electron_1.ipcRenderer.send('set-session-token', token); },\n    getSessionToken: auth_1.default.getSessionToken\n});\n\n\n//# sourceURL=webpack://telcloud/./src/js/preloaders/sign_in_preload.ts?");
 
 /***/ }),
 
@@ -492,6 +492,17 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ "crypto":
+/*!*************************!*\
+  !*** external "crypto" ***!
+  \*************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("crypto");
 
 /***/ }),
 

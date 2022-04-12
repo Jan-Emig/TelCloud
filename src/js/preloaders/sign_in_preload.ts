@@ -1,7 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import Auth from '../electron/auth';
+import AuthService from '../electron/services/auth';
 
 contextBridge.exposeInMainWorld('api', {
-    signIn: () => ipcRenderer.send('sign-in'),
-    getAppUuid: Auth.getAppUuid,
+    signIn: (token: string) => ipcRenderer.send('sign-in', token),
+    getAppUuid: AuthService.getAppUuid,
+    setSessionToken: (token: string) => ipcRenderer.send('set-session-token', token),
+    getSessionToken: AuthService.getSessionToken
 });

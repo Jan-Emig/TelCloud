@@ -9,6 +9,7 @@ import Lottie from 'react-lottie-player';
 
 axios.defaults.params = {}
 axios.defaults.params['app_uuid'] = window.api.getAppUuid();
+console.log(window.api.getAppUuid());
 
 /**
  * 
@@ -86,7 +87,10 @@ const SignIn: FC = () => {
 
             axios.post(Helper.buildRequestUrl('signin'), { username, password})
             .then((res: AxiosResponse) => {
-                // if (!res.data) window.api.signIn();
+                const res_data = res.data;
+                if (res_data?.s_token.length > 0) {
+                    window.api.signIn(res_data.s_token);
+                }
             })
             .catch((err: AxiosError) => {
                 const response = err.response;
