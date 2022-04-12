@@ -1,5 +1,6 @@
 export interface ElectronAPI {
-    signIn(): void
+    signIn(): void,
+    getAppUuid(): string
 }
 
 declare global {
