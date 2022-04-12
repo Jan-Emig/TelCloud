@@ -28,6 +28,7 @@
     "@fontsource/montserrat": "^4.5.7",
     "@types/axios": "^0.14.0",
     "axios": "^0.26.1",
+    "crypto-js": "^4.1.1",
     "framer-motion": "^6.2.8",
     "internet-available": "^1.0.0",
     "react-lottie-player": "^1.4.1"

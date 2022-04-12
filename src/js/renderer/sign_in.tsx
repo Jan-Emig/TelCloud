@@ -7,8 +7,8 @@ import { Helper } from '../helpers/helper';
 import MotionAlert from '../comps/motion_alert';
 import Lottie from 'react-lottie-player';
 
-import * as load_balancer_animation from '../../json/load-balancer_lottie.json';
-
+axios.defaults.params = {}
+axios.defaults.params['app_uuid'] = window.api.getAppUuid();
 
 /**
  * 
@@ -86,7 +86,7 @@ const SignIn: FC = () => {
 
             axios.post(Helper.buildRequestUrl('signin'), { username, password})
             .then((res: AxiosResponse) => {
-                if (!res.data) window.api.signIn();
+                // if (!res.data) window.api.signIn();
             })
             .catch((err: AxiosError) => {
                 const response = err.response;
@@ -118,7 +118,7 @@ const SignIn: FC = () => {
                             }
                             if (response.data['password']) {
                                 setPasswordErrorMessage(response.data['password']);
-                            }
+                            } else throw new Error;
                         } catch (error: any) { setHasSignInFailed(true); }
 
                     } else if (response.status === 429) {

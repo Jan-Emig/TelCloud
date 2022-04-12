@@ -19,7 +19,7 @@ const NoConnection: FC = () => {
             </Box>
             <Box mt="30px">
                 <Center>
-                    <Image src="./assets/no_connection.svg" alt="No Connection Image" boxSize="250px"></Image>
+                    <Image src="./assets/no_connection.svg" alt="No Connection Image" boxSize="275px"></Image>
                 </Center>
                 <Center mt="10px">
                     <Heading size="2xl" color="gray.600">Oh no!</Heading>
