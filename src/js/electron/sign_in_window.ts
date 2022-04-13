@@ -22,8 +22,9 @@ const sign_in_window = () => {
         return { action: 'allow' };
     })
 
-    ipcMain.on('sign-in', async(event: IpcMainEvent, token: string) => {
+    ipcMain.on('sign-in', async(event: IpcMainEvent, token: string, user_uuid: string) => {
         if (token) AuthService.setSessionToken(token);
+        if (user_uuid) AuthService.setUserUuid(user_uuid);
         const webContents = event.sender;
         const win = BrowserWindow.fromWebContents(webContents);
         win?.close();
