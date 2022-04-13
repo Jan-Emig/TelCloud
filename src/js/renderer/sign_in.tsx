@@ -7,9 +7,10 @@ import { Helper } from '../helpers/helper';
 import MotionAlert from './comps/motion_alert';
 import Lottie from 'react-lottie-player';
 
-axios.defaults.params = {}
-axios.defaults.params['app_uuid'] = window.api.getAppUuid();
-console.log(window.api.getAppUuid());
+window.api.getAppUuid().then((uuid: string) => {
+    axios.defaults.params = {}
+    axios.defaults.params['app_uuid'] = uuid;
+})
 
 /**
  * 
@@ -88,8 +89,8 @@ const SignIn: FC = () => {
             axios.post(Helper.buildRequestUrl('signin'), { username, password})
             .then((res: AxiosResponse) => {
                 const res_data = res.data;
-                if (res_data?.s_token.length > 0) {
-                    window.api.signIn(res_data.s_token);
+                if (res_data?.s_token.length > 0 && res_data?.u_uuid.length > 0) {
+                    window.api.signIn(res_data.s_token, res_data.u_uuid);
                 }
             })
             .catch((err: AxiosError) => {
