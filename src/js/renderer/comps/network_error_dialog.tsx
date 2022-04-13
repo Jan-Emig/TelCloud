@@ -1,9 +1,9 @@
 import React, { createRef, Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, ChakraProvider, Image, useDisclosure } from '@chakra-ui/react';
-import * as wifiAnimation from '../../json/wifi_lottie.json';
+import * as wifiAnimation from '../../../json/wifi_lottie.json';
 import Lottie from 'react-lottie-player';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { Helper } from '../helpers/helper';
+import { Helper } from '../../helpers/helper';
 
 interface INetworkErrorDialog {
     setHasReconnected: Dispatch<SetStateAction<boolean>>,

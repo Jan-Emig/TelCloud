@@ -9,6 +9,12 @@ import { app } from "electron";
 let app_uuid = '50ebb47e-8025-40bf-a3fb-b91da2554ba5';
 let s_token: string = '';
 
+interface JsonTest {
+    s_token: string;
+    app: string;
+    uname: string;
+}
+
 export default class AuthService {
 
 
@@ -40,7 +46,7 @@ export default class AuthService {
                 s_token = token;
                 const cred_path = app.getPath('userData') + '/cred.json'
                 fs.readFile(cred_path, 'utf8', (err, data) => {
-                    let cred_data = { s_token: '', app: '', uname: '' };
+                    let cred_data: JsonTest = { s_token: '', app: '', uname: '' };
 
                     if (err && err.code === 'ENOENT') cred_data.app = this.getAppUuid(); // Create new cred file if it doesn't exist'
                     else if (err) throw err;
