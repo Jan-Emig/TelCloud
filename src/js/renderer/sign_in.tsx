@@ -2,9 +2,9 @@ import { Box, Button, Center, ChakraProvider, FormControl, FormErrorMessage, Hea
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { FC, FormEvent, KeyboardEvent, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import NetworkErrorDialog from '../comps/network_error_dialog';
+import NetworkErrorDialog from './comps/network_error_dialog';
 import { Helper } from '../helpers/helper';
-import MotionAlert from '../comps/motion_alert';
+import MotionAlert from './comps/motion_alert';
 import Lottie from 'react-lottie-player';
 
 axios.defaults.params = {}
