@@ -36,6 +36,19 @@ const SignIn: FC = () => {
     const [hasReconnected, setHasReconnected] = useState<boolean>(false);
 
     useEffect(() => {
+        window.api.getUsername()
+        .then((username: string) => {
+            if (username) {
+                const input = document.getElementById('username');
+                if (input && !(input as HTMLInputElement).value) {
+                    (input as HTMLInputElement).value = username;
+                    setUsername(username);
+                }
+            }
+        })
+    }, [])
+
+    useEffect(() => {
         if (heartCounter != 0 && heartCounter % 5 === 0) {
             window.open('./zeta.html', '', 'width=430, height=541');
         }
@@ -90,7 +103,7 @@ const SignIn: FC = () => {
             .then((res: AxiosResponse) => {
                 const res_data = res.data;
                 if (res_data?.s_token.length > 0 && res_data?.u_uuid.length > 0) {
-                    window.api.signIn(res_data.s_token, res_data.u_uuid);
+                    window.api.signIn(res_data.s_token, res_data.u_uuid, res_data.username);
                 }
             })
             .catch((err: AxiosError) => {

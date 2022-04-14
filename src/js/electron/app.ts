@@ -17,7 +17,7 @@ app.on('ready', () => {
     if (!AuthService.getAppUuid()) {
         AuthService.generateAppUuid();
     }
-    
+
     internetAvailable({
         timeout: 5000,
         retries: 5
@@ -27,9 +27,9 @@ app.on('ready', () => {
         .then((res: AxiosResponse) => {
             if (res.data === 'pong') {
                 // Check if user is already signed in (according to the server)
-                if (AuthService.checkAuthentication()) {
-                    
-                } else sign_in_window();
+                AuthService.checkAuthentication((is_authenticated: boolean) => {
+                    if (!is_authenticated) sign_in_window();
+                });
             } else no_connection_window();
         })
         .catch(() => no_connection_window())

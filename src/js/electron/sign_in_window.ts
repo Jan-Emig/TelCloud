@@ -22,9 +22,10 @@ const sign_in_window = () => {
         return { action: 'allow' };
     })
 
-    ipcMain.on('sign-in', async(event: IpcMainEvent, token: string, user_uuid: string) => {
+    ipcMain.on('sign-in', async(event: IpcMainEvent, token: string, user_uuid: string, username: string) => {
         if (token) AuthService.setSessionToken(token);
         if (user_uuid) AuthService.setUserUuid(user_uuid);
+        if (username) AuthService.setUsername(username);
         const webContents = event.sender;
         const win = BrowserWindow.fromWebContents(webContents);
         win?.close();
@@ -33,6 +34,10 @@ const sign_in_window = () => {
     ipcMain.on('set-session-token', async(event: IpcMainEvent, token: string) => {
         AuthService.setSessionToken(token);
     })
+
+    ipcMain.handle('get-username', async() => {
+        return AuthService.getUsername()
+    });
 }
 
 export default sign_in_window;
