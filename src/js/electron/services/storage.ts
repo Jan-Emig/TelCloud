@@ -8,6 +8,9 @@ export default class StorageService {
     //TODO: Outsource
     public static readonly cred_path = app.getPath('userData') + '/cred.json';
 
+    /**
+     * DEPCRECATED, ASYNCHRONOUS METHOD TO GET THE LOCAL CRED FILE
+     */
     public static getCredFile(processFunc: { (err: NodeJS.ErrnoException | null, data: string): void }): boolean {
         try {
             const data = fs.readFileSync(this.cred_path, 'utf8');
@@ -18,6 +21,11 @@ export default class StorageService {
         return false;
     }
 
+    /**
+     * Checks the app's integrity by investigating the cred file's content and structure
+     * This method automatically creates a new valid cred file if it's detected a faulty file
+     * @return {boolean} was_successfull
+     */
     public static integrityCeck(): boolean {
         try {
             let faulty_file = false;

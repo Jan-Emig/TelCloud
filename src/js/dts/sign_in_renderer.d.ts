@@ -4,6 +4,7 @@ export interface ElectronAPI {
     setSessionToken(token: string): void,
     getSessionToken(): Promise<string>,
     getUsername(): Promise<string>,
+    showSignUpWindow(): Promise<void>
 }
 
 export interface App {

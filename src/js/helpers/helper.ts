@@ -5,7 +5,7 @@ export class Helper {
     /**
      * Builds an absolute path for outgoing requests
      * @param  {string} url
-     * @returns string
+     * @returns {string}
      */
     public static buildRequestUrl(url: string): string { return Constants.SERVER_URL + url; }
 

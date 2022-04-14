@@ -27,6 +27,10 @@ export default class AuthService {
         .catch(() => callback(false));
     }
 
+    /**
+     * Synchronously generates a new app uuid and simultaneously creates a new cred file if neccessary
+     * @returns string (app uuid)
+     */
     public static generateAppUuid(): string {
         try {
             let temp_cred_data: ICredentialFile = { s_token: null, app_uuid: '', u_uuid: null, username: null,};
@@ -46,6 +50,10 @@ export default class AuthService {
         catch (e) {throw new Error('App id could not be set.')}
     }
 
+    /**
+     * Synchronously reads the app uuid from the existing cred file or generates one if needed
+     * @return {string} app uuid
+     */
     public static getAppUuid(): string {
         //TODO: Outsoure data to database or encrypted file
         let uuid = '';
@@ -59,6 +67,11 @@ export default class AuthService {
         return uuid;
     }
 
+    /**
+     * Synchronously sets a new session token and stores it in the local cred loadFile
+     * @param  {string} session token
+     * @return {boolean} was_successfull
+     */
     public static setSessionToken(token: string): boolean {
         //TODO: outsource session token to database or encrypted file
         token = token.trim();
@@ -74,12 +87,14 @@ export default class AuthService {
                 return true;
             }
         }
-        catch (e) {
-            console.log(e);
-         }
+        catch (e) { }
         return false;
     }
 
+    /**
+     * Synchronously Reads the current session token fromt the local cred file
+     * @return {string|null} session_token
+     **/
     public static getSessionToken(): string | null {
         try {
             const data = fs.readFileSync(StorageService.cred_path, 'utf8');
@@ -91,6 +106,10 @@ export default class AuthService {
         return null;
     }
 
+    /**
+     * Synchronously reads the current user uuid from the local cred file
+     * @return {string|null} user_uuid
+     */
     public static getUserUuid(): string | null {
         try {
             const data = fs.readFileSync(StorageService.cred_path, 'utf8');
@@ -101,6 +120,11 @@ export default class AuthService {
         return null;
     }
 
+    /**
+     * Synchronously sets the new user uuid and stores it in the local cred file
+     * @param {string} user_uuid
+     * @return {boolean} was_successfull
+     */
     public static setUserUuid(uuid: string): boolean {
         if (validator.isUUID(uuid)) {
             try {
@@ -115,6 +139,10 @@ export default class AuthService {
         return false;
     }
 
+    /**
+     * Synchronously reads the stored username from the local cred file
+     * @return {string|null} username
+     */
     public static getUsername(): string | null {
         try {
             const data = fs.readFileSync(StorageService.cred_path, 'utf8');
@@ -125,6 +153,11 @@ export default class AuthService {
         return null;
     }
 
+    /**
+     * Sets the new username and stores it in the local cred file
+     * @param {string} username 
+     * @return {boolean} was_successfull
+     */
     public static setUsername(username: string): boolean {
         if (username.length > 0) {
             try {

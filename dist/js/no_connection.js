@@ -2522,14 +2522,14 @@ eval("\nmodule.exports = function () {\n  var selection = document.getSelection(
 
 /***/ }),
 
-/***/ "./src/js/renderer/no_connection.tsx":
-/*!*******************************************!*\
-  !*** ./src/js/renderer/no_connection.tsx ***!
-  \*******************************************/
+/***/ "./src/js/renderer/windows/no_connection.tsx":
+/*!***************************************************!*\
+  !*** ./src/js/renderer/windows/no_connection.tsx ***!
+  \***************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar react_1 = __webpack_require__(/*! @chakra-ui/react */ \"./node_modules/@chakra-ui/react/dist/chakra-ui-react.esm.js\");\nvar react_2 = __importDefault(__webpack_require__(/*! react */ \"./node_modules/react/index.js\"));\nvar react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ \"./node_modules/react-dom/index.js\"));\n/**\n *\n * Main overlay at the startup of the app if\n * no internet connection could be detected.\n *\n **/\nvar NoConnection = function () {\n    var render = function () { return (react_2.default.createElement(react_1.ChakraProvider, null,\n        react_2.default.createElement(react_1.Box, { mt: \"10px\" },\n            react_2.default.createElement(react_1.Center, null,\n                react_2.default.createElement(react_1.Image, { src: \"./assets/telegram_brand.svg\", alt: \"Telegram\", boxSize: \"45px\", mt: \"10px\" }))),\n        react_2.default.createElement(react_1.Box, { mt: \"30px\" },\n            react_2.default.createElement(react_1.Center, null,\n                react_2.default.createElement(react_1.Image, { src: \"./assets/no_connection.svg\", alt: \"No Connection Image\", boxSize: \"275px\" })),\n            react_2.default.createElement(react_1.Center, { mt: \"10px\" },\n                react_2.default.createElement(react_1.Heading, { size: \"2xl\", color: \"gray.600\" }, \"Oh no!\")),\n            react_2.default.createElement(react_1.Center, null,\n                react_2.default.createElement(react_1.Text, { width: \"250px\", align: \"center\", color: \"gray.500\" }, \"We could not establish a connection to our servers \\uD83D\\uDE25\")),\n            react_2.default.createElement(react_1.Center, { mt: \"25px\" },\n                react_2.default.createElement(react_1.Spinner, { color: \"gray.500\" }))))); };\n    return render();\n};\nreact_dom_1.default.render(react_2.default.createElement(NoConnection, null), document.getElementById('app'));\n\n\n//# sourceURL=webpack://telcloud/./src/js/renderer/no_connection.tsx?");
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar react_1 = __webpack_require__(/*! @chakra-ui/react */ \"./node_modules/@chakra-ui/react/dist/chakra-ui-react.esm.js\");\nvar react_2 = __importDefault(__webpack_require__(/*! react */ \"./node_modules/react/index.js\"));\nvar react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ \"./node_modules/react-dom/index.js\"));\n/**\n *\n * Main overlay at the startup of the app if\n * no internet connection could be detected.\n *\n **/\nvar NoConnection = function () {\n    var render = function () { return (react_2.default.createElement(react_1.ChakraProvider, null,\n        react_2.default.createElement(react_1.Box, { mt: \"10px\" },\n            react_2.default.createElement(react_1.Center, null,\n                react_2.default.createElement(react_1.Image, { src: \"./assets/telegram_brand.svg\", alt: \"Telegram\", boxSize: \"45px\", mt: \"10px\" }))),\n        react_2.default.createElement(react_1.Box, { mt: \"30px\" },\n            react_2.default.createElement(react_1.Center, null,\n                react_2.default.createElement(react_1.Image, { src: \"./assets/no_connection.svg\", alt: \"No Connection Image\", boxSize: \"275px\" })),\n            react_2.default.createElement(react_1.Center, { mt: \"10px\" },\n                react_2.default.createElement(react_1.Heading, { size: \"2xl\", color: \"gray.600\" }, \"Oh no!\")),\n            react_2.default.createElement(react_1.Center, null,\n                react_2.default.createElement(react_1.Text, { width: \"250px\", align: \"center\", color: \"gray.500\" }, \"We could not establish a connection to our servers \\uD83D\\uDE25\")),\n            react_2.default.createElement(react_1.Center, { mt: \"25px\" },\n                react_2.default.createElement(react_1.Spinner, { color: \"gray.500\" }))))); };\n    return render();\n};\nreact_dom_1.default.render(react_2.default.createElement(NoConnection, null), document.getElementById('app'));\n\n\n//# sourceURL=webpack://telcloud/./src/js/renderer/windows/no_connection.tsx?");
 
 /***/ }),
 
@@ -4880,7 +4880,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/js/renderer/no_connection.tsx");
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/js/renderer/windows/no_connection.tsx");
 /******/ 	
 /******/ })()
 ;
