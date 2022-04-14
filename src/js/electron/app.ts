@@ -17,8 +17,7 @@ app.on('ready', () => {
     if (!AuthService.getAppUuid()) {
         AuthService.generateAppUuid();
     }
-    console.log(AuthService.getAppUuid() + '!!!');
-
+    
     internetAvailable({
         timeout: 5000,
         retries: 5

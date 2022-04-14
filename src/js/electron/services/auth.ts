@@ -1,9 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 import fs from 'fs';
 import { randomUUID } from 'crypto';
+import validator from 'validator';
 import { Helper } from "../../helpers/helper";
-import { AppConstants } from '../helpers/app_constants';
-import { app } from "electron";
 import ICredentialFile from "../../renderer/types/ICredentialFile";
 import StorageService from "./storage";
 
@@ -40,7 +39,7 @@ export default class AuthService {
                 if (err && err.code === 'ENOENT') temp_cred_data.app_uuid = randomUUID(); // Create new cred file if it doesn't exist'
             }
             json_data.app_uuid = temp_cred_data.app_uuid;
-            fs.writeFile(StorageService.cred_path, JSON.stringify(this.cred_data), (err) => { if (err) throw err; })
+            fs.writeFileSync(StorageService.cred_path, JSON.stringify(this.cred_data))
             return temp_cred_data.app_uuid;
         }
         catch (e) {throw new Error('App id could not be set.')}
@@ -72,9 +71,8 @@ export default class AuthService {
                 temp_cred_data.s_token = json_data.s_token;
                 temp_cred_data.app_uuid = json_data.app_uuid;
                 temp_cred_data.u_uuid = json_data.u_uuid;
-
                 this.cred_data.s_token = temp_cred_data.s_token;
-                fs.writeFile(StorageService.cred_path, JSON.stringify(this.cred_data), (err) => { if (err) throw err; });
+                fs.writeFileSync(StorageService.cred_path, JSON.stringify(this.cred_data));
                 return true;
             }
         }
@@ -105,7 +103,17 @@ export default class AuthService {
         return null;
     }
 
-    public static setUserUuid(uuid: string) {
-        
+    public static setUserUuid(uuid: string): boolean {
+        if (validator.isUUID(uuid)) {
+            try {
+                const data = fs.readFileSync(StorageService.cred_path, 'utf8');
+                const cred_data = JSON.parse(data);
+                cred_data.u_uuid = uuid;
+                fs.writeFileSync(StorageService.cred_path, JSON.stringify(cred_data));
+                return true;
+            }
+            catch (e) { console.log(e) }
+        }
+        return false;
     }
 }
