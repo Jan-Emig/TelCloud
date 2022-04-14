@@ -31,6 +31,7 @@
     "crypto-js": "^4.1.1",
     "framer-motion": "^6.2.8",
     "internet-available": "^1.0.0",
-    "react-lottie-player": "^1.4.1"
+    "react-lottie-player": "^1.4.1",
+    "validator": "^13.7.0"
   }
 }

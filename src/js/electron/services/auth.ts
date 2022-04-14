@@ -29,15 +29,19 @@ export default class AuthService {
 
     public static generateAppUuid(): string {
         try {
-            StorageService.getCredFile((err, data) => {
-                let temp_cred_data: ICredentialFile = { s_token: null, app_uuid: '', u_uuid: null };
+            let temp_cred_data: ICredentialFile = { s_token: null, app_uuid: '', u_uuid: null };
+            let data = '';
+            let json_data: ICredentialFile = { s_token: null, app_uuid: '', u_uuid: null }
+            try {
+                data = fs.readFileSync(StorageService.cred_path, 'utf8');
+                json_data = JSON.parse(data);
+            }
+            catch (err: any) {
                 if (err && err.code === 'ENOENT') temp_cred_data.app_uuid = randomUUID(); // Create new cred file if it doesn't exist'
-                else if (err) throw err;
-                let json_data = JSON.parse(data);
-                json_data.app_uuid = temp_cred_data.app_uuid;
-                fs.writeFile(StorageService.cred_path, JSON.stringify(this.cred_data), (err) => { if (err) throw err; })
-                return temp_cred_data.app_uuid;
-            })
+            }
+            json_data.app_uuid = temp_cred_data.app_uuid;
+            fs.writeFile(StorageService.cred_path, JSON.stringify(this.cred_data), (err) => { if (err) throw err; })
+            return temp_cred_data.app_uuid;
         }
         catch (e) {throw new Error('App id could not be set.')}
         return '';
@@ -45,16 +49,15 @@ export default class AuthService {
 
     public static getAppUuid(): string {
         //TODO: Outsoure data to database or encrypted file
+        let uuid = '';
         try
         {
-            StorageService.getCredFile((err, data) => {
-                if (err) throw err;
-                const json_data = JSON.parse(data);
-                return (!json_data.app_uuid) ? this.generateAppUuid() : json_data.app_uuid;
-            });
+            const data = fs.readFileSync(StorageService.cred_path, 'utf8');
+            const json_data = JSON.parse(data);
+            uuid =  (!json_data.app_uuid) ? this.generateAppUuid() : json_data.app_uuid;
         }
         catch (e) { throw new Error('App id could not be read')}
-        return '';
+        return uuid;
     }
 
     public static setSessionToken(token: string): boolean {
@@ -63,27 +66,15 @@ export default class AuthService {
         try {
             if (token.length === 64) {
                 this.cred_data.s_token = token;
-                StorageService.getCredFile((err, data) => {
-                    let temp_cred_data: ICredentialFile = { s_token: null, app_uuid: '', u_uuid: null };
-                    const json_data = JSON.parse(data);
-                    temp_cred_data.s_token = json_data.s_token;
-                    temp_cred_data.app_uuid = json_data.app_uuid;
-                    temp_cred_data.u_uuid = json_data.u_uuid;
+                const data = fs.readFileSync(StorageService.cred_path, 'utf8');
+                let temp_cred_data: ICredentialFile = { s_token: null, app_uuid: '', u_uuid: null };
+                const json_data = JSON.parse(data);
+                temp_cred_data.s_token = json_data.s_token;
+                temp_cred_data.app_uuid = json_data.app_uuid;
+                temp_cred_data.u_uuid = json_data.u_uuid;
 
-                    this.cred_data.s_token = temp_cred_data.s_token;
-                    console.log(this.cred_data);
-                    fs.writeFile(StorageService.cred_path, JSON.stringify(this.cred_data), (err) => { if (err) throw err; });
-                })
-                // fs.readFile(cred_path, 'utf8', (err, data) => {
-                //     let cred_data: ICredentialFile = { s_token: null, app: '', u_uuid: null };
-
-                //     if (err && err.code === 'ENOENT') cred_data.app = this.getAppUuid(); // Create new cred file if it doesn't exist'
-                //     else if (err) throw err;
-                //     else cred_data = JSON.parse(data);
-
-                //     cred_data.s_token = s_token;
-                //     fs.writeFile(cred_path, JSON.stringify(cred_data), (err) => { if (err) throw err; });
-                // });
+                this.cred_data.s_token = temp_cred_data.s_token;
+                fs.writeFile(StorageService.cred_path, JSON.stringify(this.cred_data), (err) => { if (err) throw err; });
                 return true;
             }
         }
@@ -95,11 +86,10 @@ export default class AuthService {
 
     public static getSessionToken(): string | null {
         try {
-            StorageService.getCredFile((err, data) => {
-                if (err) throw err;
-                const cred_data = JSON.parse(data);
-                const s_token = cred_data.s_token;
-            })
+            const data = fs.readFileSync(StorageService.cred_path, 'utf8');
+            const cred_data = JSON.parse(data);
+            const s_token = cred_data.s_token;
+            return s_token;
         }
         catch (e) {}
         return null;
@@ -107,18 +97,15 @@ export default class AuthService {
 
     public static getUserUuid(): string | null {
         try {
-            StorageService.getCredFile((err, data) => {
-                if (err) throw err;
-                const cred_data = JSON.parse(data);
-                return cred_data.u_uuid;
-            })
-                
+            const data = fs.readFileSync(StorageService.cred_path, 'utf8');
+            const cred_data = JSON.parse(data);
+            return cred_data.u_uuid;
         }
-        catch (e) { console.log(e); }
+        catch (e) {  }
         return null;
     }
 
-    public static setUserUuid(value: string) {
-
+    public static setUserUuid(uuid: string) {
+        
     }
 }
