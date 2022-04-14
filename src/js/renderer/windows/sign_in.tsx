@@ -6,6 +6,7 @@ import NetworkErrorDialog from '../comps/network_error_dialog';
 import { Helper } from '../../helpers/helper';
 import MotionAlert from '../comps/motion_alert';
 import Lottie from 'react-lottie-player';
+import FormHelper from '../helpers/form_helper';
 
 window.api.getAppUuid().then((uuid: string) => {
     axios.defaults.params = {}
@@ -54,11 +55,7 @@ const SignIn: FC = () => {
         }
     }, [heartCounter, setHeartCounter])
 
-    // useEffect(() => {
-    //     setIsNetworkErrorDialogRequested(false);
-    // }, [hasReconnected, setHasReconnected])
-
-    const handleInputChange = (e: FormEvent<HTMLInputElement>, input_field: string) => {
+    const handleInputChange = (e: FormEvent<HTMLInputElement>, input_field: 'username' | 'password') => {
         const value = e.currentTarget.value.trim();
         if (!hasInputChanged) setHasInputChanged(true);
 
@@ -79,12 +76,12 @@ const SignIn: FC = () => {
     }
 
 
-    const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.code === 'Enter') {
-            e.currentTarget.blur();
-            signIn();
-        }
-    }
+    // const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    //     if (e.code === 'Enter') {
+    //         e.currentTarget.blur();
+    //         signIn();
+    //     }
+    // }
 
     const signIn = async () => {
         if (!isSigningIn && hasInputChanged && !isPasswordError && !isUsernameError && password && username) {
@@ -160,9 +157,7 @@ const SignIn: FC = () => {
         }
     }
 
-    const openSignUpWindow = (e: MouseEvent<HTMLAnchorElement>) => {
-        
-    }
+    const openSignUpWindow = (e: MouseEvent<HTMLAnchorElement>) => window.api.showSignUpWindow();
 
     const render = () => {
         return (
@@ -183,7 +178,7 @@ const SignIn: FC = () => {
                                 type="text"
                                 placeholder="Username"
                                 onChange={(e) => handleInputChange(e, 'username')} 
-                                onKeyDown={handleInputKeyDown}
+                                onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, signIn)}
                             />
                             <FormErrorMessage>{ usernameErrorMessage }</FormErrorMessage>
                         </FormControl>
@@ -194,7 +189,7 @@ const SignIn: FC = () => {
                                     type={(showPassword) ? 'text' : "password"}
                                     placeholder="Password"
                                     onChange={(e) => handleInputChange(e, 'password')}
-                                    onKeyDown={handleInputKeyDown}
+                                    onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, signIn)}
                                 />
                                 <InputRightElement>
                                     <Button onClick={() => setShowPassword(!showPassword)}>

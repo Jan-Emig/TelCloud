@@ -1,5 +1,6 @@
 import { BrowserWindow, ipcMain, IpcMainEvent, IpcMainInvokeEvent, shell } from "electron";
 import AuthService from "../services/auth";
+import sign_up_window from "./sign_up_window";
 const path = require('path');
 
 const sign_in_window = () => {
@@ -34,6 +35,11 @@ const sign_in_window = () => {
     ipcMain.handle('set-session-token', async(event: IpcMainInvokeEvent, token: string) => AuthService.setSessionToken(token))
 
     ipcMain.handle('get-username', async() => AuthService.getUsername());
+
+    ipcMain.handle('show-sign-up-window', () => {
+        sign_in_win.close();
+        sign_up_window();
+    })
 }
 
 export default sign_in_window;
