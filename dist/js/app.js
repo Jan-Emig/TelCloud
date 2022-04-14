@@ -9,6 +9,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+<<<<<<< HEAD
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -388,6 +389,8 @@ eval("/**\n * Module dependencies.\n */\n\nconst tty = __webpack_require__(/*! t
 
 /***/ }),
 
+=======
+>>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
 /***/ "./node_modules/dns-packet/index.js":
 /*!******************************************!*\
   !*** ./node_modules/dns-packet/index.js ***!
@@ -438,6 +441,7 @@ eval("var dgram = __webpack_require__(/*! dgram */ \"dgram\")\nvar util = __webp
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ "./node_modules/follow-redirects/debug.js":
 /*!************************************************!*\
   !*** ./node_modules/follow-redirects/debug.js ***!
@@ -469,6 +473,8 @@ eval("\n\nmodule.exports = (flag, argv = process.argv) => {\n\tconst prefix = fl
 
 /***/ }),
 
+=======
+>>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
 /***/ "./node_modules/internet-available/internet-available.js":
 /*!***************************************************************!*\
   !*** ./node_modules/internet-available/internet-available.js ***!
@@ -490,6 +496,7 @@ eval("\n\nvar ip = exports;\nvar Buffer = (__webpack_require__(/*! buffer */ \"b
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ "./node_modules/ms/index.js":
 /*!**********************************!*\
   !*** ./node_modules/ms/index.js ***!
@@ -500,6 +507,8 @@ eval("/**\n * Helpers.\n */\n\nvar s = 1000;\nvar m = s * 60;\nvar h = m * 60;\n
 
 /***/ }),
 
+=======
+>>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
 /***/ "./node_modules/safe-buffer/index.js":
 /*!*******************************************!*\
   !*** ./node_modules/safe-buffer/index.js ***!
@@ -510,6 +519,7 @@ eval("/* eslint-disable node/no-deprecated-api */\nvar buffer = __webpack_requir
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ "./node_modules/supports-color/index.js":
 /*!**********************************************!*\
   !*** ./node_modules/supports-color/index.js ***!
@@ -521,6 +531,8 @@ eval("\nconst os = __webpack_require__(/*! os */ \"os\");\nconst tty = __webpack
 
 /***/ }),
 
+=======
+>>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
 /***/ "./src/js/electron/app.ts":
 /*!********************************!*\
   !*** ./src/js/electron/app.ts ***!
@@ -528,6 +540,7 @@ eval("\nconst os = __webpack_require__(/*! os */ \"os\");\nconst tty = __webpack
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
+<<<<<<< HEAD
 eval("\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\n    return new (P || (P = Promise))(function (resolve, reject) {\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\n    });\n};\nvar __generator = (this && this.__generator) || function (thisArg, body) {\n    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;\n    return g = { next: verb(0), \"throw\": verb(1), \"return\": verb(2) }, typeof Symbol === \"function\" && (g[Symbol.iterator] = function() { return this; }), g;\n    function verb(n) { return function (v) { return step([n, v]); }; }\n    function step(op) {\n        if (f) throw new TypeError(\"Generator is already executing.\");\n        while (_) try {\n            if (f = 1, y && (t = op[0] & 2 ? y[\"return\"] : op[0] ? y[\"throw\"] || ((t = y[\"return\"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;\n            if (y = 0, t) op = [op[0] & 2, t.value];\n            switch (op[0]) {\n                case 0: case 1: t = op; break;\n                case 4: _.label++; return { value: op[1], done: false };\n                case 5: _.label++; y = op[1]; op = [0]; continue;\n                case 7: op = _.ops.pop(); _.trys.pop(); continue;\n                default:\n                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }\n                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }\n                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }\n                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }\n                    if (t[2]) _.ops.pop();\n                    _.trys.pop(); continue;\n            }\n            op = body.call(thisArg, _);\n        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }\n        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };\n    }\n};\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar axios_1 = __importDefault(__webpack_require__(/*! axios */ \"./node_modules/axios/index.js\"));\nvar helper_1 = __webpack_require__(/*! ../helpers/helper */ \"./src/js/helpers/helper.ts\");\nvar auth_1 = __importDefault(__webpack_require__(/*! ./services/auth */ \"./src/js/electron/services/auth.ts\"));\nvar no_connection_window_1 = __importDefault(__webpack_require__(/*! ./no_connection_window */ \"./src/js/electron/no_connection_window.ts\"));\nvar sign_in_window_1 = __importDefault(__webpack_require__(/*! ./sign_in_window */ \"./src/js/electron/sign_in_window.ts\"));\nvar electron_1 = __webpack_require__(/*! electron */ \"electron\");\nvar storage_1 = __importDefault(__webpack_require__(/*! ./services/storage */ \"./src/js/electron/services/storage.ts\"));\nvar app = (__webpack_require__(/*! electron */ \"electron\").app);\nvar internetAvailable = __webpack_require__(/*! internet-available */ \"./node_modules/internet-available/internet-available.js\");\napp.on('ready', function () {\n    storage_1.default.integrityCeck();\n    if (!auth_1.default.getAppUuid()) {\n        auth_1.default.generateAppUuid();\n    }\n    console.log(auth_1.default.getAppUuid() + '!!!');\n    internetAvailable({\n        timeout: 5000,\n        retries: 5\n    })\n        .then(function () {\n        axios_1.default.get(helper_1.Helper.buildRequestUrl('ping'))\n            .then(function (res) {\n            if (res.data === 'pong') {\n                // Check if user is already signed in (according to the server)\n                if (auth_1.default.checkAuthentication()) {\n                }\n                else\n                    (0, sign_in_window_1.default)();\n            }\n            else\n                (0, no_connection_window_1.default)();\n        })\n            .catch(function () { return (0, no_connection_window_1.default)(); });\n    })\n        .catch(no_connection_window_1.default);\n    /**\n     * IPC Event Handlers\n     */\n    electron_1.ipcMain.handle('app-uuid', function () { return __awaiter(void 0, void 0, void 0, function () {\n        return __generator(this, function (_a) {\n            return [2 /*return*/, auth_1.default.getAppUuid()];\n        });\n    }); });\n    electron_1.ipcMain.handle('session-token', function () { return __awaiter(void 0, void 0, void 0, function () {\n        return __generator(this, function (_a) {\n            return [2 /*return*/, auth_1.default.getSessionToken()];\n        });\n    }); });\n});\n\n\n//# sourceURL=webpack://telcloud/./src/js/electron/app.ts?");
 
 /***/ }),
@@ -551,6 +564,9 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 
 "use strict";
 eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar axios_1 = __importDefault(__webpack_require__(/*! axios */ \"./node_modules/axios/index.js\"));\nvar fs_1 = __importDefault(__webpack_require__(/*! fs */ \"fs\"));\nvar crypto_1 = __webpack_require__(/*! crypto */ \"crypto\");\nvar helper_1 = __webpack_require__(/*! ../../helpers/helper */ \"./src/js/helpers/helper.ts\");\nvar storage_1 = __importDefault(__webpack_require__(/*! ./storage */ \"./src/js/electron/services/storage.ts\"));\n//TODO: Remove hardcoded params and request them fromt he responsible source (db or encrypted file)\nvar AuthService = /** @class */ (function () {\n    function AuthService() {\n    }\n    AuthService.checkAuthentication = function () {\n        axios_1.default.get(helper_1.Helper.buildRequestUrl('auth-check'), { params: { app_uuid: this.getAppUuid() } })\n            .then(function (res) {\n            if (res.status === 200 && res.data.length) {\n                return res.data;\n            }\n        })\n            .catch();\n        return false;\n    };\n    AuthService.generateAppUuid = function () {\n        try {\n            var temp_cred_data = { s_token: null, app_uuid: '', u_uuid: null };\n            var data = '';\n            var json_data = { s_token: null, app_uuid: '', u_uuid: null };\n            try {\n                data = fs_1.default.readFileSync(storage_1.default.cred_path, 'utf8');\n                json_data = JSON.parse(data);\n            }\n            catch (err) {\n                if (err && err.code === 'ENOENT')\n                    temp_cred_data.app_uuid = (0, crypto_1.randomUUID)(); // Create new cred file if it doesn't exist'\n            }\n            json_data.app_uuid = temp_cred_data.app_uuid;\n            fs_1.default.writeFile(storage_1.default.cred_path, JSON.stringify(this.cred_data), function (err) { if (err)\n                throw err; });\n            return temp_cred_data.app_uuid;\n        }\n        catch (e) {\n            throw new Error('App id could not be set.');\n        }\n        return '';\n    };\n    AuthService.getAppUuid = function () {\n        //TODO: Outsoure data to database or encrypted file\n        var uuid = '';\n        try {\n            var data = fs_1.default.readFileSync(storage_1.default.cred_path, 'utf8');\n            var json_data = JSON.parse(data);\n            uuid = (!json_data.app_uuid) ? this.generateAppUuid() : json_data.app_uuid;\n        }\n        catch (e) {\n            throw new Error('App id could not be read');\n        }\n        return uuid;\n    };\n    AuthService.setSessionToken = function (token) {\n        //TODO: outsource session token to database or encrypted file\n        token = token.trim();\n        try {\n            if (token.length === 64) {\n                this.cred_data.s_token = token;\n                var data = fs_1.default.readFileSync(storage_1.default.cred_path, 'utf8');\n                var temp_cred_data = { s_token: null, app_uuid: '', u_uuid: null };\n                var json_data = JSON.parse(data);\n                temp_cred_data.s_token = json_data.s_token;\n                temp_cred_data.app_uuid = json_data.app_uuid;\n                temp_cred_data.u_uuid = json_data.u_uuid;\n                this.cred_data.s_token = temp_cred_data.s_token;\n                fs_1.default.writeFile(storage_1.default.cred_path, JSON.stringify(this.cred_data), function (err) { if (err)\n                    throw err; });\n                return true;\n            }\n        }\n        catch (e) {\n            console.log(e);\n        }\n        return false;\n    };\n    AuthService.getSessionToken = function () {\n        try {\n            var data = fs_1.default.readFileSync(storage_1.default.cred_path, 'utf8');\n            var cred_data = JSON.parse(data);\n            var s_token = cred_data.s_token;\n            return s_token;\n        }\n        catch (e) { }\n        return null;\n    };\n    AuthService.getUserUuid = function () {\n        try {\n            var data = fs_1.default.readFileSync(storage_1.default.cred_path, 'utf8');\n            var cred_data = JSON.parse(data);\n            return cred_data.u_uuid;\n        }\n        catch (e) { }\n        return null;\n    };\n    AuthService.setUserUuid = function (uuid) {\n    };\n    AuthService.cred_data = {\n        s_token: null,\n        app_uuid: '50ebb47e-8025-40bf-a3fb-b91da2554ba5',\n        u_uuid: null\n    };\n    return AuthService;\n}());\nexports[\"default\"] = AuthService;\n\n\n//# sourceURL=webpack://telcloud/./src/js/electron/services/auth.ts?");
+=======
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar storage_1 = __importDefault(__webpack_require__(/*! ./services/storage */ \"./src/js/electron/services/storage.ts\"));\nvar app = (__webpack_require__(/*! electron */ \"electron\").app);\nvar internetAvailable = __webpack_require__(/*! internet-available */ \"./node_modules/internet-available/internet-available.js\");\napp.on('ready', function () {\n    storage_1.default.integrityCeck();\n    // if (!AuthService.getAppUuid()) {\n    //     //TODO: Create new app uuid and store it into the interal database\n    //     AuthService.generateAppUuid();\n    // }\n    // internetAvailable({\n    //     timeout: 5000,\n    //     retries: 5\n    // })\n    // .then(() => {\n    //     axios.get(Helper.buildRequestUrl('ping'))\n    //     .then((res: AxiosResponse) => {\n    //         if (res.data === 'pong') {\n    //             // Check if user is already signed in (according to the server)\n    //             if (AuthService.checkAuthentication()) {\n    //             } else sign_in_window();\n    //         } else no_connection_window();\n    //     })\n    //     .catch(() => no_connection_window())\n    // })\n    // .catch(no_connection_window);\n    // /**\n    //  * IPC Event Handlers\n    //  */\n    // ipcMain.handle('app-uuid', async () => {\n    //     return AuthService.getAppUuid();\n    // })\n    // ipcMain.handle('session-token', async () => {\n    //     return AuthService.getSessionToken();\n    // });\n});\n\n\n//# sourceURL=webpack://telcloud/./src/js/electron/app.ts?");
+>>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
 
 /***/ }),
 
@@ -561,6 +577,7 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
+<<<<<<< HEAD
 eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar fs_1 = __importDefault(__webpack_require__(/*! fs */ \"fs\"));\nvar electron_1 = __webpack_require__(/*! electron */ \"electron\");\nvar StorageService = /** @class */ (function () {\n    function StorageService() {\n    }\n    StorageService.getCredFile = function (processFunc) {\n        try {\n            var data = fs_1.default.readFileSync(this.cred_path, 'utf8');\n            processFunc(null, data);\n            return true;\n        }\n        catch (e) { }\n        return false;\n    };\n    StorageService.integrityCeck = function () {\n        var _this = this;\n        try {\n            StorageService.getCredFile(function (err, data) {\n                var faulty_file = err != null && err.code === 'ENOENT';\n                if (!faulty_file) {\n                    try {\n                        // Examine if cred file contains all required attributes by checking the existence\n                        // of all attribute's keys\n                        var json_data = JSON.parse(data);\n                        faulty_file = !json_data.hasOwnProperty('s_token') || !json_data.hasOwnProperty('app_uuid') || !json_data.hasOwnProperty('u_uuid');\n                    }\n                    catch (e) {\n                        faulty_file = true;\n                    }\n                }\n                if (faulty_file) {\n                    // Create new cred file\n                    var temp_cred_data = { s_token: null, app_uuid: '', u_uuid: null };\n                    fs_1.default.writeFile(_this.cred_path, JSON.stringify(temp_cred_data), function (err) { if (err)\n                        throw err; });\n                }\n                return true;\n            });\n        }\n        catch (e) { }\n        return false;\n    };\n    //TODO: Outsource\n    StorageService.cred_path = electron_1.app.getPath('userData') + '/cred.json';\n    return StorageService;\n}());\nexports[\"default\"] = StorageService;\n\n\n//# sourceURL=webpack://telcloud/./src/js/electron/services/storage.ts?");
 
 /***/ }),
@@ -606,6 +623,9 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
 
 "use strict";
 module.exports = require("assert");
+=======
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar fs_1 = __importDefault(__webpack_require__(/*! fs */ \"fs\"));\nvar electron_1 = __webpack_require__(/*! electron */ \"electron\");\nvar StorageService = /** @class */ (function () {\n    function StorageService() {\n    }\n    StorageService.getCredFile = function (processFunc) {\n        try {\n            fs_1.default.readFile(this.cred_path, 'utf8', processFunc);\n            return true;\n        }\n        catch (e) { }\n        return false;\n    };\n    StorageService.integrityCeck = function () {\n        var _this = this;\n        try {\n            StorageService.getCredFile(function (err, data) {\n                var faulty_file = err != null && err.code === 'ENOENT';\n                if (!faulty_file) {\n                    try {\n                        // Examine if cred file contains all required attributes by checking the existence\n                        // of all attribute's keys\n                        var json_data = JSON.parse(data);\n                        faulty_file = !json_data.hasOwnProperty('s_token') || !json_data.hasOwnProperty('app_uuid') || !json_data.hasOwnProperty('u_uuid');\n                    }\n                    catch (e) {\n                        faulty_file = true;\n                    }\n                }\n                if (faulty_file) {\n                    // Create new cred file\n                    var temp_cred_data = { s_token: null, app_uuid: '', u_uuid: null };\n                    fs_1.default.writeFile(_this.cred_path, JSON.stringify(temp_cred_data), function (err) { if (err)\n                        throw err; });\n                }\n                return true;\n            });\n        }\n        catch (e) { }\n        return false;\n    };\n    //TODO: Outsource\n    StorageService.cred_path = electron_1.app.getPath('userData') + '/cred.json';\n    return StorageService;\n}());\nexports[\"default\"] = StorageService;\n\n\n//# sourceURL=webpack://telcloud/./src/js/electron/services/storage.ts?");
+>>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
 
 /***/ }),
 
@@ -620,6 +640,7 @@ module.exports = require("buffer");
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ "crypto":
 /*!*************************!*\
   !*** external "crypto" ***!
@@ -631,6 +652,8 @@ module.exports = require("crypto");
 
 /***/ }),
 
+=======
+>>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
 /***/ "dgram":
 /*!************************!*\
   !*** external "dgram" ***!
@@ -675,6 +698,7 @@ module.exports = require("fs");
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ "http":
 /*!***********************!*\
   !*** external "http" ***!
@@ -697,6 +721,8 @@ module.exports = require("https");
 
 /***/ }),
 
+=======
+>>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
 /***/ "os":
 /*!*********************!*\
   !*** external "os" ***!
@@ -708,14 +734,22 @@ module.exports = require("os");
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ "path":
+=======
+/***/ "util":
+>>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
 /*!***********************!*\
-  !*** external "path" ***!
+  !*** external "util" ***!
   \***********************/
 /***/ ((module) => {
 
 "use strict";
+<<<<<<< HEAD
 module.exports = require("path");
+=======
+module.exports = require("util");
+>>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
 
 /***/ }),
 

@@ -11,6 +11,7 @@ const { app } = require('electron');
 const internetAvailable = require('internet-available');
 
 app.on('ready', () => {
+<<<<<<< HEAD
 
     StorageService.integrityCeck();
 
@@ -47,4 +48,42 @@ app.on('ready', () => {
     ipcMain.handle('session-token', async () => {
         return AuthService.getSessionToken();
     });
+=======
+
+    StorageService.integrityCeck();
+
+    // if (!AuthService.getAppUuid()) {
+    //     //TODO: Create new app uuid and store it into the interal database
+    //     AuthService.generateAppUuid();
+    // }
+
+    // internetAvailable({
+    //     timeout: 5000,
+    //     retries: 5
+    // })
+    // .then(() => {
+    //     axios.get(Helper.buildRequestUrl('ping'))
+    //     .then((res: AxiosResponse) => {
+    //         if (res.data === 'pong') {
+    //             // Check if user is already signed in (according to the server)
+    //             if (AuthService.checkAuthentication()) {
+                    
+    //             } else sign_in_window();
+    //         } else no_connection_window();
+    //     })
+    //     .catch(() => no_connection_window())
+    // })
+    // .catch(no_connection_window);
+
+    // /**
+    //  * IPC Event Handlers
+    //  */
+    // ipcMain.handle('app-uuid', async () => {
+    //     return AuthService.getAppUuid();
+    // })
+
+    // ipcMain.handle('session-token', async () => {
+    //     return AuthService.getSessionToken();
+    // });
+>>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
 });
