@@ -9,12 +9,8 @@ export default class StorageService {
 
     public static getCredFile(processFunc: { (err: NodeJS.ErrnoException | null, data: string): void }): boolean {
         try {
-<<<<<<< HEAD
             const data = fs.readFileSync(this.cred_path, 'utf8');
             processFunc(null, data);
-=======
-            fs.readFile(this.cred_path, 'utf8', processFunc);
->>>>>>> 2c2afb1ddb5c0d959e7b37a80ed764d5c9f3c5e6
             return true;
         }
         catch (e) {}
