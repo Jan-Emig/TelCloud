@@ -1,4 +1,6 @@
 import { BrowserWindow } from "electron";
+import path from "path";
+// const path = require("path");
 
 const sign_up_window = () => {
     let sign_up_win = new BrowserWindow({
@@ -6,7 +8,8 @@ const sign_up_window = () => {
         height: 580,
         minWidth: 350,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            preload: path.join(__dirname, 'api_preload.js')
         },
     });
 

@@ -6,7 +6,7 @@ module.exports = [
         entry: {
             app: './src/js/electron/app.ts',
             sign_in: './src/js/renderer/windows/sign_in.tsx',
-            sign_in_preload: './src/js/preloaders/sign_in_preload.ts',
+            api_preload: './src/js/preloaders/api_preload.ts',
             zeta: './src/js/zeta.tsx',
             no_connection: './src/js/renderer/windows/no_connection.tsx',
             sign_up: './src/js/renderer/windows/sign_up.tsx'

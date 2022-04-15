@@ -6,6 +6,7 @@ import no_connection_window from "./windows/no_connection_window";
 import sign_in_window from "./windows/sign_in_window";
 import { ipcMain, IpcMainEvent } from "electron";
 import StorageService from "./services/storage";
+import sign_up_window from "./windows/sign_up_window";
 const { app } = require('electron');
 
 const internetAvailable = require('internet-available');
@@ -23,6 +24,8 @@ app.on('ready', () => {
         retries: 5
     })
     .then(() => {
+        sign_up_window();
+        return;
         axios.get(Helper.buildRequestUrl('ping'))
         .then((res: AxiosResponse) => {
             if (res.data === 'pong') {

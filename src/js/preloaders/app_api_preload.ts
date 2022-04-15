@@ -1,5 +1,6 @@
-// import { contextBridge, ipcRenderer } from "electron";
+import { contextBridge, ipcRenderer } from "electron";
 
-// contextBridge.exposeInMainWorld('app', {
-//     getAppPath: (dir: string) => ipcRenderer.send('app-path', dir),
-// })
+contextBridge.exposeInMainWorld('app', {
+    getAppPath: (dir: string) => ipcRenderer.send('app-path', dir),
+    getAppUuid: () => ipcRenderer.invoke('app-uuid'),
+})

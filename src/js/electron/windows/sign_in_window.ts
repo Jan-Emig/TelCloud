@@ -1,7 +1,8 @@
 import { BrowserWindow, ipcMain, IpcMainEvent, IpcMainInvokeEvent, shell } from "electron";
 import AuthService from "../services/auth";
 import sign_up_window from "./sign_up_window";
-const path = require('path');
+import path from "path";
+// const path = require('path');
 
 const sign_in_window = () => {
     let sign_in_win = new BrowserWindow({
@@ -10,7 +11,7 @@ const sign_in_window = () => {
         minWidth: 350,
         webPreferences: {
             nodeIntegration: true,
-            preload: path.join(__dirname, 'sign_in_preload.js')
+            preload: path.join(__dirname, 'api_preload.js')
         },
     });
     

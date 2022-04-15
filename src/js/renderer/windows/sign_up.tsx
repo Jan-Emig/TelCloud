@@ -1,16 +1,18 @@
 import { Box, Button, Center, ChakraProvider, FormControl, FormErrorMessage, FormHelperText, Heading, Image, Input, InputGroup, InputRightElement, Link, Text } from "@chakra-ui/react";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import React, { FC, FormEvent, useState, MouseEvent } from "react";
+import React, { FC, FormEvent, useState, MouseEvent, SetStateAction, Dispatch } from "react";
 import ReactDOM from "react-dom";
 import { Helper } from "../../helpers/helper";
 import FormHelper from '../helpers/form_helper';
 
+window.api.getAppUuid().then((uuid: string) => {
+    axios.defaults.params = {}
+    axios.defaults.params['app_uuid'] = uuid;
+})
 
 const SignUp: FC = () => {
     const [showUsernameScreen, setShowUsernameScree] = useState(true);
     const [username, setUsername] = useState('');
-    const [isUsernameError, setIsUsernameError] = useState(false);
-    const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordError, setIsPasswordError] = useState(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
@@ -21,29 +23,16 @@ const SignUp: FC = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isButtonDisabled, setisButtonDisabled] = useState(false);
     const [isSigningUp, setIsIsSigningUp] = useState(false);
-    const [isUsernameGenerating, setIsUsernameGenerating] = useState(false);
 
-    const handleInputChange = (e: FormEvent<HTMLInputElement>, input_field: 'username' | 'password' | 'confirm_password') => {}
+    const handleInputChange = (e: FormEvent<HTMLInputElement>, input_field: 'username' | 'password' | 'confirm_password') => {
+
+    }
 
     const signUp = () => {
 
     }
 
     const openSignInWindow = () => {}
-
-    const generateUsername = (e: MouseEvent<HTMLAnchorElement>) => {
-        if (isUsernameGenerating) return;
-        axios.get(Helper.buildRequestUrl('generate-username'))
-        .then((res: AxiosResponse) => {
-            if (res.data.length) {
-                const username = document.getElementById('username');
-                if (username) (username as HTMLInputElement).value = res.data;
-            }
-        })
-        .catch((err: AxiosError) => {
-
-        })
-    }
 
     const render = () => (
         <ChakraProvider>
@@ -59,24 +48,7 @@ const SignUp: FC = () => {
             <Center>
                 <Box mt="75px" width="75%">
                     {
-                        showUsernameScreen && (
-                            <FormControl isRequired isInvalid={isUsernameError}>
-                                <Input 
-                                    id="username"
-                                    type="text"
-                                    placeholder="Username"
-                                    onChange={(e) => handleInputChange(e, 'username')} 
-                                    onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, signUp)}
-                                />
-                                <FormErrorMessage>{ usernameErrorMessage }</FormErrorMessage>
-                                <FormHelperText>
-                                    No idea?&nbsp;
-                                    <Link
-                                        onClick={generateUsername}
-                                    >Generate a username</Link>
-                                    </FormHelperText>
-                            </FormControl>
-                        )
+                        showUsernameScreen && <UsernameComp username={username} setUsername={setUsername} />
                     }
                     {/* <FormControl isRequired isInvalid={isPasswordError} mt="20px">
                         <InputGroup>
@@ -147,19 +119,84 @@ const SignUp: FC = () => {
                         I already have an account. <Link onClick={openSignInWindow}>Bring me back!</Link>.
                     </Text> */}
                     <Center>
-                        <Button
-                            colorScheme="blue"
-                            mt="40px"
-                            opacity={isUsernameGenerating ? 0.5 : 1}
-                            leftIcon={
-                                <Image src="./assets/arrow_nav_right.svg" alt="Arrow symbole" boxSize="25px" />
-                            }
-                        >What's next?</Button>
                     </Center>
                 </Box>
             </Center>
         </ChakraProvider>
     )
+
+    return render();
+}
+
+interface IUsernameProps {
+    username: string,
+    setUsername: Dispatch<SetStateAction<string>>
+}
+
+const UsernameComp: FC<IUsernameProps> = ({ username, setUsername }) => {
+    const [isUsernameError, setIsUsernameError] = useState(false);
+    const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
+    const [isUsernameGenerating, setIsUsernameGenerating] = useState(false);
+
+    const handleInputChange = (e: FormEvent<HTMLInputElement>): void => {
+        if (e.currentTarget) {
+            const new_username = e.currentTarget.value.trim();
+        }
+    }
+
+    const generateUsername = (e: MouseEvent<HTMLAnchorElement>) => {
+        if (isUsernameGenerating) return;
+        axios.get(Helper.buildRequestUrl('generate-username'))
+        .then((res: AxiosResponse) => {
+            if (res.data.length) {
+                const username = document.getElementById('username');
+                if (username) (username as HTMLInputElement).value = res.data;
+            }
+        })
+        .catch((err: AxiosError) => {
+
+        })
+    }
+
+    const checkUsername = () => {
+        
+    }
+
+    const render = () => {
+        return (
+        <ChakraProvider>
+            <Center>
+            <FormControl isRequired isInvalid={isUsernameError}>
+                <Input 
+                    id="username"
+                    type="text"
+                    placeholder="Username"
+                    onChange={(e) => handleInputChange(e)} 
+                    onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, checkUsername)}
+                    textAlign="center"
+                />
+                <FormErrorMessage>{ usernameErrorMessage }</FormErrorMessage>
+                <FormHelperText textAlign="center">
+                    No idea?&nbsp;
+                    <Link
+                        opacity={isUsernameGenerating ? 0.5 : undefined}
+                        onClick={generateUsername}
+                    >Generate a username</Link>
+                    </FormHelperText>
+            </FormControl>      
+            </Center>
+            <Center>
+                <Button
+                    colorScheme="blue"
+                    mt="40px"
+                    leftIcon={
+                        <Image src="./assets/arrow_nav_right.svg" alt="Arrow symbole" boxSize="25px" />
+                    }
+                >What's next?</Button>
+            </Center>
+        </ChakraProvider>
+        );
+    }
 
     return render();
 }

@@ -10,13 +10,13 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/js/preloaders/sign_in_preload.ts":
-/*!**********************************************!*\
-  !*** ./src/js/preloaders/sign_in_preload.ts ***!
-  \**********************************************/
+/***/ "./src/js/preloaders/api_preload.ts":
+/*!******************************************!*\
+  !*** ./src/js/preloaders/api_preload.ts ***!
+  \******************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar electron_1 = __webpack_require__(/*! electron */ \"electron\");\nelectron_1.contextBridge.exposeInMainWorld('api', {\n    signIn: function (token, user_uuid, username) { return electron_1.ipcRenderer.invoke('sign-in', token, user_uuid, username); },\n    getAppUuid: function () { return electron_1.ipcRenderer.invoke('app-uuid'); },\n    setSessionToken: function (token) { return electron_1.ipcRenderer.invoke('set-session-token', token); },\n    getSessionToken: function () { return electron_1.ipcRenderer.invoke('session-token'); },\n    getUsername: function () { return electron_1.ipcRenderer.invoke('get-username'); },\n    showSignUpWindow: function () { return electron_1.ipcRenderer.invoke('show-sign-up-window'); },\n});\n\n\n//# sourceURL=webpack://telcloud/./src/js/preloaders/sign_in_preload.ts?");
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar electron_1 = __webpack_require__(/*! electron */ \"electron\");\nelectron_1.contextBridge.exposeInMainWorld('api', {\n    signIn: function (token, user_uuid, username) { return electron_1.ipcRenderer.invoke('sign-in', token, user_uuid, username); },\n    getAppUuid: function () { return electron_1.ipcRenderer.invoke('app-uuid'); },\n    setSessionToken: function (token) { return electron_1.ipcRenderer.invoke('set-session-token', token); },\n    getSessionToken: function () { return electron_1.ipcRenderer.invoke('session-token'); },\n    getUsername: function () { return electron_1.ipcRenderer.invoke('get-username'); },\n    showSignUpWindow: function () { return electron_1.ipcRenderer.invoke('show-sign-up-window'); },\n});\n\n\n//# sourceURL=webpack://telcloud/./src/js/preloaders/api_preload.ts?");
 
 /***/ }),
 
@@ -61,7 +61,7 @@ module.exports = require("electron");
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/js/preloaders/sign_in_preload.ts");
+/******/ 	var __webpack_exports__ = __webpack_require__("./src/js/preloaders/api_preload.ts");
 /******/ 	
 /******/ })()
 ;
