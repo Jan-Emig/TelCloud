@@ -1,6 +1,7 @@
-import { Box, Button, Center, ChakraProvider, FormControl, FormErrorMessage, FormHelperText, Heading, Image, Input, InputGroup, InputRightElement, Link, Text } from "@chakra-ui/react";
+import { Box, Button, Center, CenterProps, ChakraComponent, ChakraProvider, FormControl, FormErrorMessage, FormHelperText, Heading, Image, Input, InputGroup, InputRightElement, Link, Text } from "@chakra-ui/react";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import React, { FC, FormEvent, useState, MouseEvent, SetStateAction, Dispatch, KeyboardEvent, useEffect } from "react";
+import { motion } from "framer-motion";
+import React, { FC, FormEvent, useState, MouseEvent, SetStateAction, Dispatch, KeyboardEvent, useEffect, createRef, useRef } from "react";
 import ReactDOM from "react-dom";
 import { Helper } from "../../helpers/helper";
 import FormHelper from '../helpers/form_helper';
@@ -9,6 +10,8 @@ window.api.getAppUuid().then((uuid: string) => {
     axios.defaults.params = {}
     axios.defaults.params['app_uuid'] = uuid;
 })
+
+const MotionCenter = motion<CenterProps>(Center);
 
 const SignUp: FC = () => {
     const [showUsernameScreen, setShowUsernameScreen] = useState(true);
@@ -200,7 +203,7 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
     useEffect(() => {
         setButtonIcon(<Image src="./assets/arrow_nav_right.svg" alt="Arrow symbole" boxSize="25px" />);
         setButtonText('What\s next?');
-        setButtonAction(submitUsername);
+        setButtonAction(() => submitUsername());
     }, [])
 
     useEffect(() => {
@@ -235,7 +238,7 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
             axios.get(Helper.buildRequestUrl('check-username'), { params: { username: username } })
             .then((res: AxiosResponse) => {
                 setIsUsernameFree(1);
-                setIsRequestActive(false);
+                // setIsRequestActive(false);
                 fadeCompOut();
             })
             .catch((err: AxiosError) => {
@@ -263,54 +266,64 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
     }
 
     const fadeCompOut = () => {
-        setShowUsernameScreen(false);
+        const username_comp = document.querySelector<HTMLDivElement>('#username_comp');
+        if (username_comp) {
+
+        }
     }
 
     const render = () => {
         return (
         <ChakraProvider>
-            <Center>
-            <FormControl isRequired isInvalid={isUsernameFree == -1}>
-                <Input 
-                    id="username"
-                    type="text"
-                    placeholder="Username"
-                    onChange={(e) => handleInputChange(e)} 
-                    onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, submitUsername)}
-                    textAlign="center"
-                    borderColor={
-                        isUsernameFree == 1 
-                        ? 'green.500' 
-                        : (
-                            isUsernameFree === -1
-                            ? 'red.500'
-                            : undefined
-                        )
-                    }
-                    _hover={{
-                         'borderColor': (
-                             isUsernameFree == 1
-                             ? 'green.500'
-                             : (
-                                 isUsernameFree == -1
-                                 ? 'red.500'
-                                 : undefined
-                             )
-                        ) 
-                    }}
-                />
-                <Center>
-                    <FormErrorMessage textAlign="center">{ usernameErrorMessage }</FormErrorMessage>
-                </Center>
-                <FormHelperText textAlign="center">
-                    No idea?&nbsp;
-                    <Link
-                        opacity={isUsernameGenerating ? 0.5 : undefined}
-                        onClick={generateUsername}
-                    >Generate a username</Link>
-                    </FormHelperText>
-            </FormControl>      
-            </Center>
+            <MotionCenter 
+                id="username_comp"
+                right="0%"
+                position="relative"
+                animate={(isUsernameFree == 1) ? { right: ['0%', '150%'], animationDelay: '1.5s' } : undefined}
+                transition={{ duration: 0.5, ease: 'easeInOut', delay: 0.75}}
+            >
+                <FormControl isRequired isInvalid={isUsernameFree == -1}>
+                    <Input 
+                        id="username"
+                        type="text"
+                        placeholder="Username"
+                        defaultValue={username}
+                        onChange={(e) => handleInputChange(e)} 
+                        onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, submitUsername)}
+                        textAlign="center"
+                        borderColor={
+                            isUsernameFree == 1 
+                            ? 'green.500' 
+                            : (
+                                isUsernameFree === -1
+                                ? 'red.500'
+                                : undefined
+                            )
+                        }
+                        _hover={{
+                            'borderColor': (
+                                isUsernameFree == 1
+                                ? 'green.500'
+                                : (
+                                    isUsernameFree == -1
+                                    ? 'red.500'
+                                    : undefined
+                                )
+                            ) 
+                        }}
+                    />
+                    <Center>
+                        <FormErrorMessage textAlign="center">{ usernameErrorMessage }</FormErrorMessage>
+                    </Center>
+                    <FormHelperText textAlign="center">
+                        No idea?&nbsp;
+                        <Link
+                            opacity={isUsernameGenerating ? 0.5 : undefined}
+                            onClick={generateUsername}
+                        >Generate a username</Link>
+                        </FormHelperText>
+                </FormControl>      
+            </MotionCenter>
         </ChakraProvider>
         );
     }
