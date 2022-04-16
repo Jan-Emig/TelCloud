@@ -4,9 +4,10 @@ import path from "path";
 
 const sign_up_window = () => {
     let sign_up_win = new BrowserWindow({
-        width: 470,
-        height: 580,
+        width: 400,
+        height: 550,
         minWidth: 350,
+        minHeight: 420,
         webPreferences: {
             nodeIntegration: true,
             preload: path.join(__dirname, 'api_preload.js')

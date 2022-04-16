@@ -6,7 +6,8 @@
   "scripts": {
     "watch": "npm run build",
     "build": "webpack --watch --config ./webpack.config.js",
-    "app-start": "electron ./dist/js/app.js"
+    "app-start": "electron ./dist/js/app.js",
+    "docker": "docker start mariadb"
   },
   "author": "Jan-Emig",
   "license": "SEE LICENSE IN <license.md>",

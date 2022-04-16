@@ -5,6 +5,6 @@ export default class FormHelper {
         e: KeyboardEvent<HTMLInputElement>,
         callback: {(e: KeyboardEvent<HTMLInputElement>): void }
     ) {
-        callback(e);
+        if (e.key == 'Enter') callback(e);
     }
 }

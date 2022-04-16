@@ -243,7 +243,7 @@ const SignIn: FC = () => {
                             ml="12.5%"
                             color="red.500"
                             display={(isSignInLimited) ? 'block' : 'none'}
-                        >That was hot 🔥! Please wait a moment until you try signing in again. We’ll extinguish the button in the meantime...</Text>
+                        >That was hot 🔥! Please wait a moment until you try signing in again. We'll extinguish the button in the meantime...</Text>
                         <Text 
                             fontSize="sm"
                             align="center"

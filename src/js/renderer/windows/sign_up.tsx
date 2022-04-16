@@ -1,6 +1,6 @@
 import { Box, Button, Center, ChakraProvider, FormControl, FormErrorMessage, FormHelperText, Heading, Image, Input, InputGroup, InputRightElement, Link, Text } from "@chakra-ui/react";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import React, { FC, FormEvent, useState, MouseEvent, SetStateAction, Dispatch } from "react";
+import React, { FC, FormEvent, useState, MouseEvent, SetStateAction, Dispatch, KeyboardEvent, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Helper } from "../../helpers/helper";
 import FormHelper from '../helpers/form_helper';
@@ -11,7 +11,7 @@ window.api.getAppUuid().then((uuid: string) => {
 })
 
 const SignUp: FC = () => {
-    const [showUsernameScreen, setShowUsernameScree] = useState(true);
+    const [showUsernameScreen, setShowUsernameScreen] = useState(true);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordError, setIsPasswordError] = useState(false);
@@ -21,8 +21,13 @@ const SignUp: FC = () => {
     const [isConfirmPasswordError, setIsConfirmPasswordError] = useState(false);
     const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [isButtonDisabled, setisButtonDisabled] = useState(false);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [isSigningUp, setIsIsSigningUp] = useState(false);
+    const [hasRequestFailed, setHasRequestFailed] = useState(false);
+    const [isNetworkError, setIsNetworkError] = useState(false);
+    const [buttonIcon, setButtonIcon] = useState(<></>);
+    const [buttonText, setButtonText] = useState('What\'s next?');
+    const [buttonAction, setButtonAction] = useState<{(): void}>();
 
     const handleInputChange = (e: FormEvent<HTMLInputElement>, input_field: 'username' | 'password' | 'confirm_password') => {
 
@@ -46,9 +51,22 @@ const SignUp: FC = () => {
                 <Text mt="15px" align="center" fontSize="14px" color="gray.700">You are just one step away from your<br />free, unlimited cloud service!</Text>
             </Box>
             <Center>
-                <Box mt="75px" width="75%">
+                <Box mt="45px" width="75%">
                     {
-                        showUsernameScreen && <UsernameComp username={username} setUsername={setUsername} />
+                        showUsernameScreen && 
+                            <UsernameComp
+                                setShowUsernameScreen={setShowUsernameScreen}
+                                username={username}
+                                setUsername={setUsername}
+                                hasRequestFailed={hasRequestFailed}
+                                setHasRequestFailed={setHasRequestFailed}
+                                isNetworkError={isNetworkError}
+                                setIsNetworkError={setIsNetworkError}
+                                setButtonText={setButtonText}
+                                setButtonIcon={setButtonIcon}
+                                setIsButtonDisabled={setIsButtonDisabled}
+                                setButtonAction={setButtonAction}
+                            />
                     }
                     {/* <FormControl isRequired isInvalid={isPasswordError} mt="20px">
                         <InputGroup>
@@ -107,20 +125,50 @@ const SignUp: FC = () => {
                             onClick={signUp}
                         >Ready to go!</Button>
                     </Center>
-                    <Text 
+                     */}
+                     <Center>
+                        <Button
+                            colorScheme="blue"
+                            mt="40px"
+                            leftIcon={buttonIcon}
+                            onClick={() => buttonAction}
+                            disabled={isButtonDisabled}
+                        >{buttonText}</Button>
+                     </Center>
+                    <Text
+                        width="75%"
                         fontSize="sm"
                         align="center"
-                        mt="10px"
-                        opacity="60%"
-                        transition="all .15s ease"
-                        color="gray.800"
-                        _hover={{ opacity: '100%' }}
-                    >
-                        I already have an account. <Link onClick={openSignInWindow}>Bring me back!</Link>.
-                    </Text> */}
-                    <Center>
-                    </Center>
+                        mt="5px"
+                        ml="12.5%"
+                        color="red.500"
+                        display={(isNetworkError) ? 'block' : 'none'}
+                    >Hmm, we couldn't establish a secure connection to our servers 🔌 &nbsp;Is your internet up & running?</Text>
+                    <Text
+                        width="75%"
+                        fontSize="sm"
+                        align="center"
+                        mt="5px"
+                        ml="12.5%"
+                        color="red.500"
+                        display={(hasRequestFailed) ? 'block' : 'none'}
+                    >Oh no 😥 Something went wrong while signing you in. Please try again, we'll do better next time 😊 !</Text>
                 </Box>
+            </Center>
+            <Center>
+                <Text 
+                    position="absolute"
+                    bottom="10px"
+                    fontSize="sm"
+                    align="center"
+                    mt="10px"
+                    transition="all .15s ease"
+                    color="gray.500"
+                    background="white"
+                    _hover={{ color: 'gray.800' }}
+                >
+                    I already have an account. <Link onClick={openSignInWindow}>Bring me back!</Link>
+                </Text>
             </Center>
         </ChakraProvider>
     )
@@ -129,18 +177,41 @@ const SignUp: FC = () => {
 }
 
 interface IUsernameProps {
+    setShowUsernameScreen: Dispatch<SetStateAction<boolean>>,
     username: string,
-    setUsername: Dispatch<SetStateAction<string>>
+    setUsername: Dispatch<SetStateAction<string>>,
+    hasRequestFailed: boolean,
+    setHasRequestFailed: Dispatch<SetStateAction<boolean>>,
+    isNetworkError: boolean,
+    setIsNetworkError: Dispatch<SetStateAction<boolean>>,
+    setButtonText: Dispatch<SetStateAction<string>>,
+    setButtonIcon: Dispatch<SetStateAction<JSX.Element>>,
+    setIsButtonDisabled: Dispatch<SetStateAction<boolean>>,
+    setButtonAction: Dispatch<SetStateAction<{(): void} | undefined>>,
 }
 
-const UsernameComp: FC<IUsernameProps> = ({ username, setUsername }) => {
-    const [isUsernameError, setIsUsernameError] = useState(false);
+const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, setUsername, hasRequestFailed, setHasRequestFailed, isNetworkError, setIsNetworkError, setButtonText, setButtonIcon, setIsButtonDisabled, setButtonAction }) => {
+    // const [isUsernameError, setIsUsernameError] = useState(false);
     const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
     const [isUsernameGenerating, setIsUsernameGenerating] = useState(false);
+    const [isUsernameFree, setIsUsernameFree] = useState<-1 | 0 | 1>(0);
+    const [isRequestActive, setIsRequestActive] = useState(false);
+
+    useEffect(() => {
+        setButtonIcon(<Image src="./assets/arrow_nav_right.svg" alt="Arrow symbole" boxSize="25px" />);
+        setButtonText('What\s next?');
+        setButtonAction(submitUsername);
+    }, [])
+
+    useEffect(() => {
+        setIsButtonDisabled(isUsernameFree == -1 || isRequestActive);
+    }, [isUsernameFree, isRequestActive])
 
     const handleInputChange = (e: FormEvent<HTMLInputElement>): void => {
+        setIsUsernameFree(0);
+        if (!hasRequestFailed && !isNetworkError) setIsButtonDisabled(false);
         if (e.currentTarget) {
-            const new_username = e.currentTarget.value.trim();
+            setUsername(e.currentTarget.value.trim());
         }
     }
 
@@ -151,31 +222,86 @@ const UsernameComp: FC<IUsernameProps> = ({ username, setUsername }) => {
             if (res.data.length) {
                 const username = document.getElementById('username');
                 if (username) (username as HTMLInputElement).value = res.data;
+                setIsUsernameFree(1);
             }
-        })
-        .catch((err: AxiosError) => {
-
         })
     }
 
-    const checkUsername = () => {
-        
+    function submitUsername(): void;
+    function submitUsername(e: KeyboardEvent<HTMLInputElement> | undefined = undefined): void {
+        if (username.length) {
+            setIsRequestActive(true);
+            if (e) e.currentTarget.blur();
+            axios.get(Helper.buildRequestUrl('check-username'), { params: { username: username } })
+            .then((res: AxiosResponse) => {
+                setIsUsernameFree(1);
+                setIsRequestActive(false);
+                fadeCompOut();
+            })
+            .catch((err: AxiosError) => {
+                const response = err.response;
+                if (response) {
+                    let error_msg = '';
+                    switch (response.status) {
+                        case 404:
+                            error_msg = '🧐 Hmm...are you sure you entered an username?';
+                            break;
+                        case 409:
+                            error_msg = 'Oh no! This username is already in use 😭';
+                            setIsUsernameFree(-1);
+                            break;
+                        case 500:
+                            setHasRequestFailed(true);
+                    }
+                    setUsernameErrorMessage(error_msg);
+                } else if (err.message === 'Network Error') setIsNetworkError(true);
+                setTimeout(() => setIsRequestActive(false), 2000);
+            })
+            if (isNetworkError) setIsNetworkError(false);
+            if (hasRequestFailed) setHasRequestFailed(false);
+        }
+    }
+
+    const fadeCompOut = () => {
+        setShowUsernameScreen(false);
     }
 
     const render = () => {
         return (
         <ChakraProvider>
             <Center>
-            <FormControl isRequired isInvalid={isUsernameError}>
+            <FormControl isRequired isInvalid={isUsernameFree == -1}>
                 <Input 
                     id="username"
                     type="text"
                     placeholder="Username"
                     onChange={(e) => handleInputChange(e)} 
-                    onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, checkUsername)}
+                    onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, submitUsername)}
                     textAlign="center"
+                    borderColor={
+                        isUsernameFree == 1 
+                        ? 'green.500' 
+                        : (
+                            isUsernameFree === -1
+                            ? 'red.500'
+                            : undefined
+                        )
+                    }
+                    _hover={{
+                         'borderColor': (
+                             isUsernameFree == 1
+                             ? 'green.500'
+                             : (
+                                 isUsernameFree == -1
+                                 ? 'red.500'
+                                 : undefined
+                             )
+                        ) 
+                    }}
                 />
-                <FormErrorMessage>{ usernameErrorMessage }</FormErrorMessage>
+                <Center>
+                    <FormErrorMessage textAlign="center">{ usernameErrorMessage }</FormErrorMessage>
+                </Center>
                 <FormHelperText textAlign="center">
                     No idea?&nbsp;
                     <Link
@@ -184,15 +310,6 @@ const UsernameComp: FC<IUsernameProps> = ({ username, setUsername }) => {
                     >Generate a username</Link>
                     </FormHelperText>
             </FormControl>      
-            </Center>
-            <Center>
-                <Button
-                    colorScheme="blue"
-                    mt="40px"
-                    leftIcon={
-                        <Image src="./assets/arrow_nav_right.svg" alt="Arrow symbole" boxSize="25px" />
-                    }
-                >What's next?</Button>
             </Center>
         </ChakraProvider>
         );
