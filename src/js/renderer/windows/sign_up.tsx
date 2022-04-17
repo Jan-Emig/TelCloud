@@ -1,7 +1,7 @@
-import { Box, Button, Center, CenterProps, ChakraComponent, ChakraProvider, FormControl, FormErrorMessage, FormHelperText, Heading, Image, Input, InputGroup, InputRightElement, Link, Text } from "@chakra-ui/react";
+import { Box, BoxProps, Button, Center, CenterProps, ChakraComponent, ChakraProvider, FormControl, FormErrorMessage, FormHelperText, Heading, Image, Input, InputGroup, InputRightElement, Link, Text } from "@chakra-ui/react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { motion } from "framer-motion";
-import React, { FC, FormEvent, useState, MouseEvent, SetStateAction, Dispatch, KeyboardEvent, useEffect, createRef, useRef } from "react";
+import React, { FC, FormEvent, useState, MouseEvent, SetStateAction, Dispatch, KeyboardEvent, useEffect, createRef, useRef, RefObject } from "react";
 import ReactDOM from "react-dom";
 import { Helper } from "../../helpers/helper";
 import FormHelper from '../helpers/form_helper';
@@ -11,7 +11,10 @@ window.api.getAppUuid().then((uuid: string) => {
     axios.defaults.params['app_uuid'] = uuid;
 })
 
-const MotionCenter = motion<CenterProps>(Center);
+const MotionBox = motion<BoxProps>(Box);
+//* Currently, the username can not be stored as a react state within the main component
+//* as the state is not accessible within the callbackfunction of the submit button
+// const [username, setUsername] = useState('');
 
 const SignUp: FC = () => {
     const [showUsernameScreen, setShowUsernameScreen] = useState(true);
@@ -24,17 +27,17 @@ const SignUp: FC = () => {
     const [isConfirmPasswordError, setIsConfirmPasswordError] = useState(false);
     const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [isSigningUp, setIsIsSigningUp] = useState(false);
     const [hasRequestFailed, setHasRequestFailed] = useState(false);
     const [isNetworkError, setIsNetworkError] = useState(false);
     const [buttonIcon, setButtonIcon] = useState(<></>);
     const [buttonText, setButtonText] = useState('What\'s next?');
     const [buttonAction, setButtonAction] = useState<{(): void}>();
+    const buttonRef = createRef<HTMLButtonElement>();
 
-    const handleInputChange = (e: FormEvent<HTMLInputElement>, input_field: 'username' | 'password' | 'confirm_password') => {
+    // const handleInputChange = (e: FormEvent<HTMLInputElement>, input_field: 'username' | 'password' | 'confirm_password') => {
 
-    }
+    // }
 
     const signUp = () => {
 
@@ -42,7 +45,7 @@ const SignUp: FC = () => {
 
     const openSignInWindow = () => {}
 
-    const render = () => (
+    const render = () => { return(
         <ChakraProvider>
             <Box mt="10px">
                 <Center>
@@ -65,10 +68,6 @@ const SignUp: FC = () => {
                                 setHasRequestFailed={setHasRequestFailed}
                                 isNetworkError={isNetworkError}
                                 setIsNetworkError={setIsNetworkError}
-                                setButtonText={setButtonText}
-                                setButtonIcon={setButtonIcon}
-                                setIsButtonDisabled={setIsButtonDisabled}
-                                setButtonAction={setButtonAction}
                             />
                     }
                     {/* <FormControl isRequired isInvalid={isPasswordError} mt="20px">
@@ -129,15 +128,22 @@ const SignUp: FC = () => {
                         >Ready to go!</Button>
                     </Center>
                      */}
-                     <Center>
+                     {/* <Center>
                         <Button
                             colorScheme="blue"
                             mt="40px"
                             leftIcon={buttonIcon}
-                            onClick={() => buttonAction}
+                            onClick={() => {
+                                buttonRef.current?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter'}))
+                                const elmnt = document.querySelector<HTMLInputElement>('#username');
+                                if (elmnt) {
+                                    console.log('firing event');
+                                }
+                            }}
                             disabled={isButtonDisabled}
+                            ref={buttonRef}
                         >{buttonText}</Button>
-                     </Center>
+                     </Center> */}
                     <Text
                         width="75%"
                         fontSize="sm"
@@ -174,7 +180,7 @@ const SignUp: FC = () => {
                 </Text>
             </Center>
         </ChakraProvider>
-    )
+    )}
 
     return render();
 }
@@ -187,24 +193,20 @@ interface IUsernameProps {
     setHasRequestFailed: Dispatch<SetStateAction<boolean>>,
     isNetworkError: boolean,
     setIsNetworkError: Dispatch<SetStateAction<boolean>>,
-    setButtonText: Dispatch<SetStateAction<string>>,
-    setButtonIcon: Dispatch<SetStateAction<JSX.Element>>,
-    setIsButtonDisabled: Dispatch<SetStateAction<boolean>>,
-    setButtonAction: Dispatch<SetStateAction<{(): void} | undefined>>,
 }
 
-const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, setUsername, hasRequestFailed, setHasRequestFailed, isNetworkError, setIsNetworkError, setButtonText, setButtonIcon, setIsButtonDisabled, setButtonAction }) => {
+const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, setUsername, hasRequestFailed, setHasRequestFailed, isNetworkError, setIsNetworkError }) => {
     // const [isUsernameError, setIsUsernameError] = useState(false);
     const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
     const [isUsernameGenerating, setIsUsernameGenerating] = useState(false);
     const [isUsernameFree, setIsUsernameFree] = useState<-1 | 0 | 1>(0);
     const [isRequestActive, setIsRequestActive] = useState(false);
+    const [compAnimation, setCompAnimation] = useState<'fadeIn'|'fadeOut'|undefined>();
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-    useEffect(() => {
-        setButtonIcon(<Image src="./assets/arrow_nav_right.svg" alt="Arrow symbole" boxSize="25px" />);
-        setButtonText('What\s next?');
-        setButtonAction(() => submitUsername());
-    }, [])
+    // useEffect(() => {
+        // setButtonAction()
+    // }, [])
 
     useEffect(() => {
         setIsButtonDisabled(isUsernameFree == -1 || isRequestActive);
@@ -223,24 +225,33 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
         axios.get(Helper.buildRequestUrl('generate-username'))
         .then((res: AxiosResponse) => {
             if (res.data.length) {
-                const username = document.getElementById('username');
-                if (username) (username as HTMLInputElement).value = res.data;
-                setIsUsernameFree(1);
+                const username_input = document.querySelector<HTMLInputElement>('#username');
+                if (username_input) {
+                    username_input.value = res.data;
+                    setUsername(res.data);
+                    setIsUsernameFree(1);
+                }
             }
         })
     }
 
-    function submitUsername(): void;
+    // function submitUsername(): void;
     function submitUsername(e: KeyboardEvent<HTMLInputElement> | undefined = undefined): void {
+        const initNextFormState = () => {
+            setIsUsernameFree(1);
+            setCompAnimation("fadeOut");
+        };
+
         if (username.length) {
             setIsRequestActive(true);
             if (e) e.currentTarget.blur();
+            if (isUsernameFree) {
+                console.log('username was generated, skipping availability check...');
+                initNextFormState();
+                return;
+            }
             axios.get(Helper.buildRequestUrl('check-username'), { params: { username: username } })
-            .then((res: AxiosResponse) => {
-                setIsUsernameFree(1);
-                // setIsRequestActive(false);
-                fadeCompOut();
-            })
+            .then((res: AxiosResponse) => initNextFormState)
             .catch((err: AxiosError) => {
                 const response = err.response;
                 if (response) {
@@ -265,65 +276,74 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
         }
     }
 
-    const fadeCompOut = () => {
-        const username_comp = document.querySelector<HTMLDivElement>('#username_comp');
-        if (username_comp) {
-
-        }
-    }
-
     const render = () => {
         return (
         <ChakraProvider>
-            <MotionCenter 
+            <MotionBox 
                 id="username_comp"
                 right="0%"
                 position="relative"
-                animate={(isUsernameFree == 1) ? { right: ['0%', '150%'], animationDelay: '1.5s' } : undefined}
-                transition={{ duration: 0.5, ease: 'easeInOut', delay: 0.75}}
+                variants={{
+                    fadeOut: { right: ['0%', '150%']},
+                    fadeIn: { right: ['150%', '0%']}
+                }}
+                // animate={(isUsernameFree == 1) ? 'fadeIn' : undefined}
+                animate={compAnimation}
+                transition={{ duration: 0.5, ease: 'easeInOut', delay: (compAnimation == 'fadeOut') ? 0.5 : 0}}
             >
-                <FormControl isRequired isInvalid={isUsernameFree == -1}>
-                    <Input 
-                        id="username"
-                        type="text"
-                        placeholder="Username"
-                        defaultValue={username}
-                        onChange={(e) => handleInputChange(e)} 
-                        onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, submitUsername)}
-                        textAlign="center"
-                        borderColor={
-                            isUsernameFree == 1 
-                            ? 'green.500' 
-                            : (
-                                isUsernameFree === -1
-                                ? 'red.500'
-                                : undefined
-                            )
-                        }
-                        _hover={{
-                            'borderColor': (
-                                isUsernameFree == 1
-                                ? 'green.500'
+                <Center>
+                    <FormControl isRequired isInvalid={isUsernameFree == -1}>
+                        <Input 
+                            id="username"
+                            type="text"
+                            placeholder="Username"
+                            defaultValue={username}
+                            onChange={(e) => handleInputChange(e)} 
+                            onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, submitUsername)}
+                            textAlign="center"
+                            borderColor={
+                                isUsernameFree == 1 
+                                ? 'green.500' 
                                 : (
-                                    isUsernameFree == -1
+                                    isUsernameFree === -1
                                     ? 'red.500'
                                     : undefined
                                 )
-                            ) 
-                        }}
-                    />
-                    <Center>
-                        <FormErrorMessage textAlign="center">{ usernameErrorMessage }</FormErrorMessage>
-                    </Center>
-                    <FormHelperText textAlign="center">
-                        No idea?&nbsp;
-                        <Link
-                            opacity={isUsernameGenerating ? 0.5 : undefined}
-                            onClick={generateUsername}
-                        >Generate a username</Link>
-                        </FormHelperText>
-                </FormControl>      
-            </MotionCenter>
+                            }
+                            _hover={{
+                                'borderColor': (
+                                    isUsernameFree == 1
+                                    ? 'green.500'
+                                    : (
+                                        isUsernameFree == -1
+                                        ? 'red.500'
+                                        : undefined
+                                    )
+                                ) 
+                            }}
+                        />
+                        <Center>
+                            <FormErrorMessage>{ usernameErrorMessage }</FormErrorMessage>
+                        </Center>
+                        <FormHelperText textAlign="center">
+                            No idea?&nbsp;
+                            <Link
+                                opacity={isUsernameGenerating ? 0.5 : undefined}
+                                onClick={generateUsername}
+                            >Generate a username</Link>
+                            </FormHelperText>
+                    </FormControl>
+                </Center>
+                <Center>
+                    <Button
+                        colorScheme="blue"
+                        mt="40px"
+                        leftIcon={<Image src="./assets/arrow_nav_right.svg" alt="Arrow symbole" boxSize="25px" />}
+                        onClick={(e) => submitUsername()}
+                        disabled={isButtonDisabled}
+                    >What's next?</Button>
+                </Center>
+            </MotionBox>
         </ChakraProvider>
         );
     }
