@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import AuthService from "./services/auth";
 import no_connection_window from "./windows/no_connection_window";
 import sign_in_window from "./windows/sign_in_window";
-import { ipcMain, IpcMainEvent } from "electron";
+import { BrowserWindow, ipcMain, IpcMainEvent, IpcMainInvokeEvent } from "electron";
 import StorageService from "./services/storage";
 import sign_up_window from "./windows/sign_up_window";
 const { app } = require('electron');
@@ -49,4 +49,26 @@ app.on('ready', () => {
     ipcMain.handle('session-token', async () => {
         return AuthService.getSessionToken();
     });
+    
+    ipcMain.handle('show-sign-in-window', (e: IpcMainInvokeEvent) => {
+        const win = BrowserWindow.fromWebContents(e.sender);
+        if (win) win.close();
+        sign_in_window();
+    })
+
+    ipcMain.handle('show-sign-up-window', (e: IpcMainInvokeEvent) => {
+        const win = BrowserWindow.fromWebContents(e.sender);
+        if (win) win.close();
+        sign_up_window();
+    })
+
+    ipcMain.handle('sign-in', async(event: IpcMainInvokeEvent, token: string, user_uuid: string, username: string) => {
+        if (token) AuthService.setSessionToken(token);
+        if (user_uuid) AuthService.setUserUuid(user_uuid);
+        if (username) AuthService.setUsername(username);
+        const webContents = event.sender;
+        const win = BrowserWindow.fromWebContents(webContents);
+        win?.close();
+        //TODO: Show file page if the user has been signed in successfully
+    })
 });

@@ -1,5 +1,7 @@
 import { BrowserWindow } from "electron";
+import { ipcMain } from "electron";
 import path from "path";
+import sign_in_window from "./sign_in_window";
 // const path = require("path");
 
 const sign_up_window = () => {
@@ -15,6 +17,8 @@ const sign_up_window = () => {
     });
 
     sign_up_win.loadFile('../sign_up.html');
+
+    
 }
 
 export default sign_up_window;

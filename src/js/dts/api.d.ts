@@ -3,9 +3,10 @@ export interface ElectronAPI {
     setSessionToken(token: string): void,
     getSessionToken(): Promise<string>,
     getUsername(): Promise<string>,
-    showSignUpWindow(): Promise<void>,
     getAppPath(dir: string): Promise<string>,
-    getAppUuid(): Promise<string>
+    getAppUuid(): Promise<string>,
+    showSignUpWindow(): Promise<void>,
+    showSignInWindow(): Promise<void>,
 }
 
 declare global {

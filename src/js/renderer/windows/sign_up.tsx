@@ -20,30 +20,11 @@ const SignUp: FC = () => {
     const [showUsernameScreen, setShowUsernameScreen] = useState(true);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [isPasswordError, setIsPasswordError] = useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [isConfirmPasswordError, setIsConfirmPasswordError] = useState(false);
-    const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [isSigningUp, setIsIsSigningUp] = useState(false);
     const [hasRequestFailed, setHasRequestFailed] = useState(false);
     const [isNetworkError, setIsNetworkError] = useState(false);
-    const [buttonIcon, setButtonIcon] = useState(<></>);
-    const [buttonText, setButtonText] = useState('What\'s next?');
-    const [buttonAction, setButtonAction] = useState<{(): void}>();
-    const buttonRef = createRef<HTMLButtonElement>();
 
-    // const handleInputChange = (e: FormEvent<HTMLInputElement>, input_field: 'username' | 'password' | 'confirm_password') => {
-
-    // }
-
-    const signUp = () => {
-
-    }
-
-    const openSignInWindow = () => {}
+    const openSignInWindow = () => window.api.showSignInWindow();
 
     const render = () => { return(
         <ChakraProvider>
@@ -128,22 +109,6 @@ const SignUp: FC = () => {
                         >Ready to go!</Button>
                     </Center>
                      */}
-                     {/* <Center>
-                        <Button
-                            colorScheme="blue"
-                            mt="40px"
-                            leftIcon={buttonIcon}
-                            onClick={() => {
-                                buttonRef.current?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter'}))
-                                const elmnt = document.querySelector<HTMLInputElement>('#username');
-                                if (elmnt) {
-                                    console.log('firing event');
-                                }
-                            }}
-                            disabled={isButtonDisabled}
-                            ref={buttonRef}
-                        >{buttonText}</Button>
-                     </Center> */}
                     <Text
                         width="75%"
                         fontSize="sm"
@@ -204,10 +169,6 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
     const [compAnimation, setCompAnimation] = useState<'fadeIn'|'fadeOut'|undefined>();
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-    // useEffect(() => {
-        // setButtonAction()
-    // }, [])
-
     useEffect(() => {
         setIsButtonDisabled(isUsernameFree == -1 || isRequestActive);
     }, [isUsernameFree, isRequestActive])
@@ -246,7 +207,6 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
             setIsRequestActive(true);
             if (e) e.currentTarget.blur();
             if (isUsernameFree) {
-                console.log('username was generated, skipping availability check...');
                 initNextFormState();
                 return;
             }
@@ -287,7 +247,6 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
                     fadeOut: { right: ['0%', '150%']},
                     fadeIn: { right: ['150%', '0%']}
                 }}
-                // animate={(isUsernameFree == 1) ? 'fadeIn' : undefined}
                 animate={compAnimation}
                 transition={{ duration: 0.5, ease: 'easeInOut', delay: (compAnimation == 'fadeOut') ? 0.5 : 0}}
             >

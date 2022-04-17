@@ -7,4 +7,5 @@ contextBridge.exposeInMainWorld('api', {
     getSessionToken: () => ipcRenderer.invoke('session-token'),
     getUsername: () => ipcRenderer.invoke('get-username'),
     showSignUpWindow: () => ipcRenderer.invoke('show-sign-up-window'),
+    showSignInWindow: () => ipcRenderer.invoke('show-sign-in-window'),
 });
