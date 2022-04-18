@@ -1,6 +1,6 @@
 import { Box, BoxProps, Button, Center, CenterProps, ChakraComponent, ChakraProvider, FormControl, FormErrorMessage, FormHelperText, Heading, Image, Input, InputGroup, InputProps, InputRightElement, Link, Text } from "@chakra-ui/react";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { motion } from "framer-motion";
+import { motion, VariantLabels } from "framer-motion";
 import React, { FC, FormEvent, useState, MouseEvent, SetStateAction, Dispatch, KeyboardEvent, useEffect, createRef, useRef, RefObject } from "react";
 import ReactDOM from "react-dom";
 import { Helper } from "../../helpers/helper";
@@ -19,6 +19,8 @@ const MotionInput = motion<InputProps>(Input);
 
 const SignUp: FC = () => {
     const [showUsernameScreen, setShowUsernameScreen] = useState(true);
+    const [showPasswordScreen, setShowPasswordScreen] = useState(false);
+    const [showConfirmPasswordScreen, setShowConfirmPasswordScreen] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -39,19 +41,38 @@ const SignUp: FC = () => {
                 <Text mt="15px" align="center" fontSize="14px" color="gray.700">You are just one step away from your<br />free, unlimited cloud service!</Text>
             </Box>
             <Center>
-                <Box mt="45px" width="75%">
-                    {
-                        showUsernameScreen && 
-                            <UsernameComp
-                                setShowUsernameScreen={setShowUsernameScreen}
-                                username={username}
-                                setUsername={setUsername}
-                                hasRequestFailed={hasRequestFailed}
-                                setHasRequestFailed={setHasRequestFailed}
-                                isNetworkError={isNetworkError}
-                                setIsNetworkError={setIsNetworkError}
-                            />
-                    }
+                <Box mt="45px" width="100%">
+                    <Box position="relative" width="100%">
+                        <Center>
+                            {
+                                showUsernameScreen && 
+                                    <UsernameComp
+                                        setShowUsernameScreen={setShowUsernameScreen}
+                                        setShowPasswordScreen={setShowPasswordScreen}
+                                        username={username}
+                                        setUsername={setUsername}
+                                        hasRequestFailed={hasRequestFailed}
+                                        setHasRequestFailed={setHasRequestFailed}
+                                        isNetworkError={isNetworkError}
+                                        setIsNetworkError={setIsNetworkError}
+                                    />
+                            }
+                            {
+                                showPasswordScreen &&
+                                    <PasswordComp
+                                        setShowPasswordScreen={setShowPasswordScreen}
+                                        setShowUsernameScreen={setShowUsernameScreen}
+                                        setShowConfirmPasswordScreen={setShowConfirmPasswordScreen}
+                                        password={password}
+                                        setPassword={setPassword}
+                                        hasRequestFailed={hasRequestFailed}
+                                        setHasRequestFailed={setHasRequestFailed}
+                                        isNetworkError={isNetworkError}
+                                        setIsNetworkError={setIsNetworkError}
+                                    />
+                            }
+                        </Center>
+                    </Box>
                     {/* <FormControl isRequired isInvalid={isPasswordError} mt="20px">
                         <InputGroup>
                             <Input 
@@ -151,8 +172,9 @@ const SignUp: FC = () => {
     return render();
 }
 
-interface IUsernameProps {
+interface IUsernameCompProps {
     setShowUsernameScreen: Dispatch<SetStateAction<boolean>>,
+    setShowPasswordScreen: Dispatch<SetStateAction<boolean>>
     username: string,
     setUsername: Dispatch<SetStateAction<string>>,
     hasRequestFailed: boolean,
@@ -161,7 +183,7 @@ interface IUsernameProps {
     setIsNetworkError: Dispatch<SetStateAction<boolean>>,
 }
 
-const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, setUsername, hasRequestFailed, setHasRequestFailed, isNetworkError, setIsNetworkError }) => {
+const UsernameComp: FC<IUsernameCompProps> = ({ setShowUsernameScreen, setShowPasswordScreen, username, setUsername, hasRequestFailed, setHasRequestFailed, isNetworkError, setIsNetworkError }) => {
     // const [isUsernameError, setIsUsernameError] = useState(false);
     const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
     const [isUsernameGenerating, setIsUsernameGenerating] = useState(false);
@@ -202,17 +224,14 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
         const initNextFormState = () => {
             setIsUsernameFree(1);
             setCompAnimation("fadeOut");
+            setShowPasswordScreen(true);
         };
 
         if (username.length) {
             setIsRequestActive(true);
             if (e) e.currentTarget.blur();
-            if (isUsernameFree) {
-                initNextFormState();
-                return;
-            }
             axios.get(Helper.buildRequestUrl('check-username'), { params: { username: username } })
-            .then((res: AxiosResponse) => initNextFormState)
+            .then((res: AxiosResponse) => initNextFormState())
             .catch((err: AxiosError) => {
                 const response = err.response;
                 if (response) {
@@ -236,11 +255,15 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
         <ChakraProvider>
             <MotionBox 
                 id="username_comp"
-                right="0%"
-                position="relative"
+                top="0"
+                right="50%"
+                width="75%"
+                transform="auto"
+                translateX="50%"
+                position="absolute"
                 variants={{
-                    fadeOut: { right: ['0%', '150%']},
-                    fadeIn: { right: ['150%', '0%']}
+                    fadeOut: { right: ['50%', '150%']},
+                    fadeIn: { right: ['150%', '50%']}
                 }}
                 animate={compAnimation}
                 transition={{ duration: 0.5, ease: 'easeInOut', delay: (compAnimation == 'fadeOut') ? 0.5 : 0}}
@@ -308,4 +331,101 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
     return render();
 }
 
+interface IPasswordCompProps {
+    setShowPasswordScreen: Dispatch<SetStateAction<boolean>>,
+    setShowUsernameScreen: Dispatch<SetStateAction<boolean>>,
+    setShowConfirmPasswordScreen: Dispatch<SetStateAction<boolean>>,
+    password: string,
+    setPassword: Dispatch<SetStateAction<string>>,
+    hasRequestFailed: boolean,
+    setHasRequestFailed: Dispatch<SetStateAction<boolean>>,
+    isNetworkError: boolean,
+    setIsNetworkError: Dispatch<SetStateAction<boolean>>,
+}
+
+const PasswordComp: FC<IPasswordCompProps> = ({ password, setPassword, hasRequestFailed, setHasRequestFailed, isNetworkError, setIsNetworkError, setShowPasswordScreen, setShowUsernameScreen, setShowConfirmPasswordScreen}) => {
+    const [compAnimation, setCompAnimation] = useState<'initFadeIn'|'fadeIn'|'fadeOut'|'fadeOut'|undefined>('initFadeIn');
+    const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+    const [isPasswordValid, setIsPasswordValid] = useState<-1|0|1>(0);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+
+    const submitPassword = (): void => {
+
+    }
+
+    const render = () => {
+        return (
+            <ChakraProvider>
+                <MotionBox
+                    id="password_comp"
+                    top="0"
+                    right="-150%"
+                    width="75%"
+                    transform="auto"
+                    translateX="50%"
+                    position="absolute"
+                    variants={{
+                        initFadeIn: { right: ['-150%', '50%']},
+                        fadeIn: { right: ['150%', '50%'] },
+                        fadeOut: { right: ['50%', '150%']}
+                    }}
+                    animate={compAnimation}
+                    transition={{ duration: 0.5, ease: 'easeInOut', delay: (compAnimation == 'fadeOut' || compAnimation == 'initFadeIn') ? 0.5 : 0}}
+                >
+<Center>
+                    <FormControl isRequired isInvalid={isPasswordValid === -1}>
+                        <MotionInput 
+                            id="username"
+                            type="text"
+                            position="relative"
+                            textAlign="center"
+                            placeholder="Username"
+                            defaultValue={password}
+                            // onChange={(e) => handleInputChange(e)} 
+                            onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, submitPassword)}
+                            // animate={isUsernameFree === -1 ? { left: ['0px', '-20px', '20px', '-20px', '20px', '-20px', '0px'] } : undefined}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                            // borderColor={
+                            //     isUsernameFree == 1 
+                            //     ? 'green.500' 
+                            //     : (
+                            //         isUsernameFree === -1
+                            //         ? 'red.500'
+                            //         : undefined
+                            //     )
+                            // }
+                            _hover={{
+                                // 'borderColor': (
+                                //     isUsernameFree == 1
+                                //     ? 'green.500'
+                                //     : (
+                                //         isUsernameFree == -1
+                                //         ? 'red.500'
+                                //         : undefined
+                                //     )
+                                // ) 
+                            }}
+                        />
+                        <Center>
+                            <FormErrorMessage>{ passwordErrorMessage }</FormErrorMessage>
+                        </Center>
+                    </FormControl>
+                </Center>
+                <Center>
+                    <Button
+                        colorScheme="blue"
+                        mt="40px"
+                        leftIcon={<Image src="./assets/arrow_nav_right.svg" alt="Arrow symbole" boxSize="25px" />}
+                        onClick={(e) => submitPassword()}
+                        disabled={isButtonDisabled}
+                    >What's next?</Button>
+                </Center>
+                </MotionBox>
+            </ChakraProvider>
+        )
+    }
+
+    return render();
+}
 ReactDOM.render(<SignUp />, document.getElementById('app'));
