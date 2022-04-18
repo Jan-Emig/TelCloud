@@ -1,4 +1,4 @@
-import { Box, BoxProps, Button, Center, CenterProps, ChakraComponent, ChakraProvider, FormControl, FormErrorMessage, FormHelperText, Heading, Image, Input, InputGroup, InputRightElement, Link, Text } from "@chakra-ui/react";
+import { Box, BoxProps, Button, Center, CenterProps, ChakraComponent, ChakraProvider, FormControl, FormErrorMessage, FormHelperText, Heading, Image, Input, InputGroup, InputProps, InputRightElement, Link, Text } from "@chakra-ui/react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { motion } from "framer-motion";
 import React, { FC, FormEvent, useState, MouseEvent, SetStateAction, Dispatch, KeyboardEvent, useEffect, createRef, useRef, RefObject } from "react";
@@ -12,6 +12,7 @@ window.api.getAppUuid().then((uuid: string) => {
 })
 
 const MotionBox = motion<BoxProps>(Box);
+const MotionInput = motion<InputProps>(Input);
 //* Currently, the username can not be stored as a react state within the main component
 //* as the state is not accessible within the callbackfunction of the submit button
 // const [username, setUsername] = useState('');
@@ -216,17 +217,11 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
                 const response = err.response;
                 if (response) {
                     let error_msg = '';
-                    switch (response.status) {
-                        case 404:
-                            error_msg = '🧐 Hmm...are you sure you entered an username?';
-                            break;
-                        case 409:
-                            error_msg = 'Oh no! This username is already in use 😭';
-                            setIsUsernameFree(-1);
-                            break;
-                        case 500:
-                            setHasRequestFailed(true);
-                    }
+                    if (response.status === 400) error_msg = response.data['username'][0] ?? '';
+                    else if (response.status === 409) {
+                        error_msg = 'Oh no! This username is already in use 😭';
+                    } else if (response.status === 500) setHasRequestFailed(true);
+                    setIsUsernameFree(-1);
                     setUsernameErrorMessage(error_msg);
                 } else if (err.message === 'Network Error') setIsNetworkError(true);
                 setTimeout(() => setIsRequestActive(false), 2000);
@@ -252,14 +247,17 @@ const UsernameComp: FC<IUsernameProps> = ({ setShowUsernameScreen, username, set
             >
                 <Center>
                     <FormControl isRequired isInvalid={isUsernameFree == -1}>
-                        <Input 
+                        <MotionInput 
                             id="username"
                             type="text"
+                            position="relative"
+                            textAlign="center"
                             placeholder="Username"
                             defaultValue={username}
                             onChange={(e) => handleInputChange(e)} 
                             onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, submitUsername)}
-                            textAlign="center"
+                            animate={isUsernameFree === -1 ? { left: ['0px', '-20px', '20px', '-20px', '20px', '-20px', '0px'] } : undefined}
+                            transition={{ duration: 0.5, delay: 0.1 }}
                             borderColor={
                                 isUsernameFree == 1 
                                 ? 'green.500' 
