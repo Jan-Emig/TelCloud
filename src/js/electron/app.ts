@@ -50,8 +50,9 @@ app.on('ready', () => {
         return AuthService.getSessionToken();
     });
     
-    ipcMain.handle('show-sign-in-window', (e: IpcMainInvokeEvent) => {
+    ipcMain.handle('show-sign-in-window', (e: IpcMainInvokeEvent, has_signed_up: boolean = false) => {
         const win = BrowserWindow.fromWebContents(e.sender);
+        if (has_signed_up) console.log('User has just signed up!');
         if (win) win.close();
         sign_in_window();
     })

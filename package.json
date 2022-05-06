@@ -15,6 +15,7 @@
   "devDependencies": {
     "@types/react": "^17.0.42",
     "@types/react-dom": "^17.0.14",
+    "@types/zxcvbn": "^4.4.1",
     "copy-webpack-plugin": "^10.2.4",
     "electron": "^17.1.2",
     "html-webpack-plugin": "^5.5.0",
@@ -35,6 +36,7 @@
     "framer-motion": "^6.2.8",
     "internet-available": "^1.0.0",
     "react-lottie-player": "^1.4.1",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "zxcvbn": "^4.4.2"
   }
 }
