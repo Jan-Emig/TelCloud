@@ -18,13 +18,12 @@ const MotionBox = motion<BoxProps>(Box);
 const MotionInput = motion<InputProps>(Input);
 
 const SignUp: FC = () => {
-    const [showUsernameScreen, setShowUsernameScreen] = useState(true);
+    const [showUsernameScreen] = useState(true);
     const [showPasswordScreen, setShowPasswordScreen] = useState(false);
     const [showConfirmPasswordScreen, setShowConfirmPasswordScreen] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [hasRequestFailed, setHasRequestFailed] = useState(false);
     const [isNetworkError, setIsNetworkError] = useState(false);
     const [usernameCompAnimation, setUsernameCompAnimation] = useState<CompAnimationStates>();
@@ -33,6 +32,8 @@ const SignUp: FC = () => {
 
     const openSignInWindow = (): Promise<void> => window.api.showSignInWindow();
 
+    // Submit the sign up form to create a new account
+    // and redirect the user to the sign in page if the process was successfull.
     const submitForm = () => {
         axios.post(Helper.buildRequestUrl('sign-up'), { username: username, password: password })
         .then((res: AxiosResponse) => {
@@ -62,7 +63,6 @@ const SignUp: FC = () => {
                             {
                                 showUsernameScreen && 
                                     <UsernameComp
-                                        setShowUsernameScreen={setShowUsernameScreen}
                                         setShowPasswordScreen={setShowPasswordScreen}
                                         username={username}
                                         setUsername={setUsername}
@@ -78,8 +78,6 @@ const SignUp: FC = () => {
                             {
                                 showPasswordScreen &&
                                     <PasswordComp
-                                        setShowPasswordScreen={setShowPasswordScreen}
-                                        setShowUsernameScreen={setShowUsernameScreen}
                                         setShowConfirmPasswordScreen={setShowConfirmPasswordScreen}
                                         password={password}
                                         setPassword={setPassword}
@@ -95,9 +93,6 @@ const SignUp: FC = () => {
                                     comfPassword={confirmPassword}
                                     setComfPassword={setConfirmPassword}
                                     password={password}
-                                    setShowConfirmPasswordScreen={setShowConfirmPasswordScreen}
-                                    setShowPasswordScreen={setShowPasswordScreen}
-                                    setShowUsernameScreen={setShowUsernameScreen}    
                                     compAnimation={confirmPasswordCompAnimation}   
                                     setCompAnimation={setConfirmPasswordCompAnimation}                       
                                     setPasswordCompAnimation={setPasswordCompAnimation}
@@ -148,7 +143,6 @@ const SignUp: FC = () => {
 }
 
 interface IUsernameCompProps {
-    setShowUsernameScreen: Dispatch<SetStateAction<boolean>>,
     setShowPasswordScreen: Dispatch<SetStateAction<boolean>>,
     username: string,
     setUsername: Dispatch<SetStateAction<string>>,
@@ -161,7 +155,7 @@ interface IUsernameCompProps {
     setPasswordCompAnimation: Dispatch<SetStateAction<CompAnimationStates>>,
 }
 
-const UsernameComp: FC<IUsernameCompProps> = ({ setShowUsernameScreen, setShowPasswordScreen, username, setUsername, hasRequestFailed, setHasRequestFailed, isNetworkError, setIsNetworkError, compAnimation, setCompAnimation, setPasswordCompAnimation }) => {
+const UsernameComp: FC<IUsernameCompProps> = ({ setShowPasswordScreen, username, setUsername, hasRequestFailed, setHasRequestFailed, isNetworkError, setIsNetworkError, compAnimation, setCompAnimation, setPasswordCompAnimation }) => {
     const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
     const [isUsernameGenerating, setIsUsernameGenerating] = useState(false);
     const [isUsernameFree, setIsUsernameFree] = useState<-1 | 0 | 1>(0);
@@ -184,8 +178,10 @@ const UsernameComp: FC<IUsernameCompProps> = ({ setShowUsernameScreen, setShowPa
         }
     }
 
+    // Request a generated username based upon english words and digits from the server
     const generateUsername = (e: MouseEvent<HTMLAnchorElement>): void => {
         if (isUsernameGenerating) return;
+        setIsUsernameGenerating(true);
         axios.get(Helper.buildRequestUrl('generate-username'))
         .then((res: AxiosResponse) => {
             if (res.data.length) {
@@ -196,6 +192,9 @@ const UsernameComp: FC<IUsernameCompProps> = ({ setShowUsernameScreen, setShowPa
                     setIsUsernameFree(1);
                 }
             }
+        })
+        .finally(() => {
+            setIsUsernameGenerating(false);
         })
     }
 
@@ -312,8 +311,6 @@ const UsernameComp: FC<IUsernameCompProps> = ({ setShowUsernameScreen, setShowPa
 }
 
 interface IPasswordCompProps {
-    setShowPasswordScreen: Dispatch<SetStateAction<boolean>>,
-    setShowUsernameScreen: Dispatch<SetStateAction<boolean>>,
     setShowConfirmPasswordScreen: Dispatch<SetStateAction<boolean>>,
     password: string,
     setPassword: Dispatch<SetStateAction<string>>,
@@ -323,7 +320,7 @@ interface IPasswordCompProps {
     setConfirmPasswordCompAnimation: Dispatch<SetStateAction<CompAnimationStates>>,
 }
 
-const PasswordComp: FC<IPasswordCompProps> = ({ password, setPassword, setShowPasswordScreen, setShowUsernameScreen, setShowConfirmPasswordScreen, compAnimation, setCompAnimation, setUsernameCompAnimation, setConfirmPasswordCompAnimation }) => {
+const PasswordComp: FC<IPasswordCompProps> = ({ password, setPassword, setShowConfirmPasswordScreen, compAnimation, setCompAnimation, setUsernameCompAnimation, setConfirmPasswordCompAnimation }) => {
     const [passwordStrength, setPasswordStrength] = useState(0);
     const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
     const [isPasswordValid, setIsPasswordValid] = useState<-1|0|1>(0);
@@ -505,9 +502,6 @@ const PasswordComp: FC<IPasswordCompProps> = ({ password, setPassword, setShowPa
 }
 
 interface IConfirmPasswordCompProps {
-    setShowPasswordScreen: Dispatch<SetStateAction<boolean>>,
-    setShowUsernameScreen: Dispatch<SetStateAction<boolean>>,
-    setShowConfirmPasswordScreen: Dispatch<SetStateAction<boolean>>,
     comfPassword: string,
     password: string,
     setComfPassword: Dispatch<SetStateAction<string>>,
@@ -517,8 +511,7 @@ interface IConfirmPasswordCompProps {
     submitForm: Function
 }
 
-const ConfirmPasswordComp: FC<IConfirmPasswordCompProps> = ({ password, comfPassword, setComfPassword, setShowPasswordScreen, setShowUsernameScreen, setShowConfirmPasswordScreen, compAnimation, setCompAnimation, setPasswordCompAnimation, submitForm }) => {
-    const [passwordStrength, setPasswordStrength] = useState(0);
+const ConfirmPasswordComp: FC<IConfirmPasswordCompProps> = ({ password, comfPassword, setComfPassword, compAnimation, setCompAnimation, setPasswordCompAnimation, submitForm }) => {
     const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
     const [isPasswordValid, setIsPasswordValid] = useState<-1|0|1>(0);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);

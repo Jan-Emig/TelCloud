@@ -1,8 +1,6 @@
-import { BrowserWindow, ipcMain, IpcMainEvent, IpcMainInvokeEvent, shell } from "electron";
+import { BrowserWindow, ipcMain, IpcMainInvokeEvent, shell } from "electron";
 import AuthService from "../services/auth";
-import sign_up_window from "./sign_up_window";
 import path from "path";
-// const path = require('path');
 
 const sign_in_window = () => {
     let sign_in_win = new BrowserWindow({

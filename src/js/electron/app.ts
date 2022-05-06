@@ -24,8 +24,6 @@ app.on('ready', () => {
         retries: 5
     })
     .then(() => {
-        sign_up_window();
-        return;
         axios.get(Helper.buildRequestUrl('ping'))
         .then((res: AxiosResponse) => {
             if (res.data === 'pong') {
