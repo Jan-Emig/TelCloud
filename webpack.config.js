@@ -9,7 +9,8 @@ module.exports = [
             api_preload: './src/js/preloaders/api_preload.ts',
             zeta: './src/js/zeta.tsx',
             no_connection: './src/js/renderer/windows/no_connection.tsx',
-            sign_up: './src/js/renderer/windows/sign_up.tsx'
+            sign_up: './src/js/renderer/windows/sign_up.tsx',
+            explorer: './src/js/renderer/windows/explorer.tsx'
         },
         mode: 'development',
         target: 'electron-main',

@@ -193,7 +193,7 @@ const SignIn: FC = () => {
                                     onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, signIn)}
                                 />
                                 <InputRightElement>
-                                    <Button onClick={() => setShowPassword(!showPassword)}>
+                                    <Button height="30px" width="30px" mr="10px" onClick={() => setShowPassword(!showPassword)}>
                                         {
                                             showPassword
                                             ? <Image src="./assets/visibility_on_black.png" alt="Open eyes" width="25px" height="25px" maxWidth="none" />

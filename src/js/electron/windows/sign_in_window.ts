@@ -26,7 +26,7 @@ const sign_in_window = (has_signed_up: boolean = false) => {
 
     ipcMain.handle('get-username', async() => AuthService.getUsername());
 
-    ipcMain.handle('has-signed-up', async() => has_signed_up || true);
+    ipcMain.handle('has-signed-up', async() => has_signed_up);
 
 }
 

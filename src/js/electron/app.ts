@@ -7,6 +7,7 @@ import sign_in_window from "./windows/sign_in_window";
 import { BrowserWindow, ipcMain, IpcMainEvent, IpcMainInvokeEvent } from "electron";
 import StorageService from "./services/storage";
 import sign_up_window from "./windows/sign_up_window";
+import explorer_window from "./windows/explorer_window";
 const { app } = require('electron');
 
 const internetAvailable = require('internet-available');
@@ -30,6 +31,7 @@ app.on('ready', () => {
                 // Check if user is already signed in (according to the server)
                 AuthService.checkAuthentication((is_authenticated: boolean) => {
                     if (!is_authenticated) sign_in_window();
+                    else explorer_window();
                 });
             } else no_connection_window();
         })
@@ -68,6 +70,6 @@ app.on('ready', () => {
         const webContents = event.sender;
         const win = BrowserWindow.fromWebContents(webContents);
         win?.close();
-        //TODO: Show file page if the user has been signed in successfully
+        explorer_window();
     })
 });

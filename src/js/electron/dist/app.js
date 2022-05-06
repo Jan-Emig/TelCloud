@@ -39,10 +39,12 @@ exports.__esModule = true;
 var axios_1 = require("axios");
 var helper_1 = require("../helpers/helper");
 var auth_1 = require("./services/auth");
-var no_connection_window_1 = require("./no_connection_window");
-var sign_in_window_1 = require("./sign_in_window");
+var no_connection_window_1 = require("./windows/no_connection_window");
+var sign_in_window_1 = require("./windows/sign_in_window");
 var electron_1 = require("electron");
 var storage_1 = require("./services/storage");
+var sign_up_window_1 = require("./windows/sign_up_window");
+var explorer_window_1 = require("./windows/explorer_window");
 var app = require('electron').app;
 var internetAvailable = require('internet-available');
 app.on('ready', function () {
@@ -62,6 +64,8 @@ app.on('ready', function () {
                 auth_1["default"].checkAuthentication(function (is_authenticated) {
                     if (!is_authenticated)
                         sign_in_window_1["default"]();
+                    else
+                        explorer_window_1["default"]();
                 });
             }
             else
@@ -79,6 +83,37 @@ app.on('ready', function () {
     electron_1.ipcMain.handle('session-token', function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             return [2 /*return*/, auth_1["default"].getSessionToken()];
+        });
+    }); });
+    electron_1.ipcMain.handle('show-sign-in-window', function (e, has_signed_up) {
+        if (has_signed_up === void 0) { has_signed_up = false; }
+        var win = electron_1.BrowserWindow.fromWebContents(e.sender);
+        if (has_signed_up)
+            console.log('User has just signed up!');
+        if (win)
+            win.close();
+        sign_in_window_1["default"](has_signed_up);
+    });
+    electron_1.ipcMain.handle('show-sign-up-window', function (e) {
+        var win = electron_1.BrowserWindow.fromWebContents(e.sender);
+        if (win)
+            win.close();
+        sign_up_window_1["default"]();
+    });
+    electron_1.ipcMain.handle('sign-in', function (event, token, user_uuid, username) { return __awaiter(void 0, void 0, void 0, function () {
+        var webContents, win;
+        return __generator(this, function (_a) {
+            if (token)
+                auth_1["default"].setSessionToken(token);
+            if (user_uuid)
+                auth_1["default"].setUserUuid(user_uuid);
+            if (username)
+                auth_1["default"].setUsername(username);
+            webContents = event.sender;
+            win = electron_1.BrowserWindow.fromWebContents(webContents);
+            win === null || win === void 0 ? void 0 : win.close();
+            explorer_window_1["default"]();
+            return [2 /*return*/];
         });
     }); });
 });
