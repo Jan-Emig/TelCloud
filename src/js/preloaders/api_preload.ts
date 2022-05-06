@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 contextBridge.exposeInMainWorld('api', {
     signIn: (token: string, user_uuid: string, username: string) => ipcRenderer.invoke('sign-in', token, user_uuid, username),
@@ -8,4 +8,5 @@ contextBridge.exposeInMainWorld('api', {
     getUsername: () => ipcRenderer.invoke('get-username'),
     showSignUpWindow: () => ipcRenderer.invoke('show-sign-up-window'),
     showSignInWindow: () => ipcRenderer.invoke('show-sign-in-window'),
+    getData: (channel: string): Promise<any> => ipcRenderer.invoke(channel),
 });

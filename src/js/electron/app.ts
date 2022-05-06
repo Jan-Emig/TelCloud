@@ -52,7 +52,7 @@ app.on('ready', () => {
         const win = BrowserWindow.fromWebContents(e.sender);
         if (has_signed_up) console.log('User has just signed up!');
         if (win) win.close();
-        sign_in_window();
+        sign_in_window(has_signed_up);
     })
 
     ipcMain.handle('show-sign-up-window', (e: IpcMainInvokeEvent) => {

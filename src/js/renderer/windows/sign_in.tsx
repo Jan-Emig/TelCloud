@@ -7,6 +7,7 @@ import { Helper } from '../../helpers/helper';
 import MotionAlert from '../comps/motion_alert';
 import Lottie from 'react-lottie-player';
 import FormHelper from '../helpers/form_helper';
+import { ipcMain } from 'electron/main';
 
 window.api.getAppUuid().then((uuid: string) => {
     axios.defaults.params = {}
@@ -35,6 +36,7 @@ const SignIn: FC = () => {
     const [isNetworkError, setIsNetworkError] = useState<boolean>(false);
     const [isNetworkErrorDialogRequested, setIsNetworkErrorDialogRequested] = useState<boolean>(false);
     const [hasReconnected, setHasReconnected] = useState<boolean>(false);
+    const [hasSignedUp, setHasSignedUp] = useState<boolean>(false);
 
     useEffect(() => {
         window.api.getUsername()
@@ -46,7 +48,13 @@ const SignIn: FC = () => {
                     setUsername(username);
                 }
             }
+        });
+
+        window.api.getData('has-signed-up')
+        .then((answ: any) => {
+            if (answ === true) setHasSignedUp(true);
         })
+
     }, [])
 
     useEffect(() => {
@@ -75,13 +83,6 @@ const SignIn: FC = () => {
         }
     }
 
-
-    // const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    //     if (e.code === 'Enter') {
-    //         e.currentTarget.blur();
-    //         signIn();
-    //     }
-    // }
 
     const signIn = async () => {
         if (!isSigningIn && hasInputChanged && !isPasswordError && !isUsernameError && password && username) {
@@ -279,6 +280,16 @@ const SignIn: FC = () => {
                             width='330px'
                             setShowElement={setHasReconnected}
                         /> 
+                }
+                {
+                    hasSignedUp &&
+                    <MotionAlert
+                        alertType='success'
+                        alertMessage='Successfully signed up. Welcome onboard 🥳'
+                        width='400px'
+                        setShowElement={setHasSignedUp}
+                        duration={3}
+                    />
                 }
             </ChakraProvider>
         )

@@ -7,6 +7,7 @@ export interface ElectronAPI {
     getAppUuid(): Promise<string>,
     showSignUpWindow(): Promise<void>,
     showSignInWindow(has_signed_up: boolean = false): Promise<void>,
+    getData(channel: string): Promise<any>
 }
 
 declare global {

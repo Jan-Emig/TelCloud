@@ -2,7 +2,7 @@ import { BrowserWindow, ipcMain, IpcMainInvokeEvent, shell } from "electron";
 import AuthService from "../services/auth";
 import path from "path";
 
-const sign_in_window = () => {
+const sign_in_window = (has_signed_up: boolean = false) => {
     let sign_in_win = new BrowserWindow({
         width: 470,
         height: 580,
@@ -25,6 +25,8 @@ const sign_in_window = () => {
     ipcMain.handle('set-session-token', async(event: IpcMainInvokeEvent, token: string) => AuthService.setSessionToken(token))
 
     ipcMain.handle('get-username', async() => AuthService.getUsername());
+
+    ipcMain.handle('has-signed-up', async() => has_signed_up || true);
 
 }
 
