@@ -20,6 +20,13 @@ app.on('ready', () => {
         AuthService.generateAppUuid();
     }
 
+    const authCheck = () => {
+        AuthService.checkAuthentication((is_authenticated: boolean) => {
+            if (!is_authenticated) sign_in_window();
+            else explorer_window();
+        });
+    }
+
     internetAvailable({
         timeout: 5000,
         retries: 5
@@ -29,13 +36,10 @@ app.on('ready', () => {
         .then((res: AxiosResponse) => {
             if (res.data === 'pong') {
                 // Check if user is already signed in (according to the server)
-                AuthService.checkAuthentication((is_authenticated: boolean) => {
-                    if (!is_authenticated) sign_in_window();
-                    else explorer_window();
-                });
-            } else no_connection_window();
+                authCheck();
+            } else no_connection_window(authCheck);
         })
-        .catch(() => no_connection_window())
+        .catch(() => no_connection_window(authCheck));
     })
     .catch(no_connection_window);
 

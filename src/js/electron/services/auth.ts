@@ -6,7 +6,6 @@ import { Helper } from "../../helpers/helper";
 import ICredentialFile from "../../renderer/types/ICredentialFile";
 import StorageService from "./storage";
 
-//TODO: Remove hardcoded params and request them fromt he responsible source (db or encrypted file)
 export default class AuthService {
 
     public static checkAuthentication(callback: { (is_authenticated: boolean): void }): void {
@@ -55,7 +54,6 @@ export default class AuthService {
      * @return {string} app uuid
      */
     public static getAppUuid(): string {
-        //TODO: Outsoure data to database or encrypted file
         let uuid = '';
         try
         {
@@ -73,7 +71,6 @@ export default class AuthService {
      * @return {boolean} was_successfull
      */
     public static setSessionToken(token: string): boolean {
-        //TODO: outsource session token to database or encrypted file
         token = token.trim();
         try {
             if (token.length === 64) {

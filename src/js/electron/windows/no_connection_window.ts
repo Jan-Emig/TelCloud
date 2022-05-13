@@ -5,7 +5,7 @@ import sign_in_window from "./sign_in_window";
 
 const internetAvailable = require('internet-available');
 
-const no_connection_window = () => {
+const no_connection_window = (authCheck: Function) => {
     const win = new BrowserWindow({
         width: 470,
         height: 580,
@@ -28,7 +28,7 @@ const no_connection_window = () => {
                 if (res.data === 'pong') {
                     clearInterval(reconnect_interval);
                     win.close();
-                    sign_in_window();
+                    authCheck();
                 }
             });
         });

@@ -6,7 +6,6 @@ var crypto_1 = require("crypto");
 var validator_1 = require("validator");
 var helper_1 = require("../../helpers/helper");
 var storage_1 = require("./storage");
-//TODO: Remove hardcoded params and request them fromt he responsible source (db or encrypted file)
 var AuthService = /** @class */ (function () {
     function AuthService() {
     }
@@ -27,6 +26,10 @@ var AuthService = /** @class */ (function () {
             }
         })["catch"](function () { return callback(false); });
     };
+    /**
+     * Synchronously generates a new app uuid and simultaneously creates a new cred file if neccessary
+     * @returns string (app uuid)
+     */
     AuthService.generateAppUuid = function () {
         try {
             var temp_cred_data = { s_token: null, app_uuid: '', u_uuid: null, username: null };
@@ -48,8 +51,11 @@ var AuthService = /** @class */ (function () {
             throw new Error('App id could not be set.');
         }
     };
+    /**
+     * Synchronously reads the app uuid from the existing cred file or generates one if needed
+     * @return {string} app uuid
+     */
     AuthService.getAppUuid = function () {
-        //TODO: Outsoure data to database or encrypted file
         var uuid = '';
         try {
             var data = fs_1["default"].readFileSync(storage_1["default"].cred_path, 'utf8');
@@ -57,12 +63,16 @@ var AuthService = /** @class */ (function () {
             uuid = (!json_data.app_uuid) ? this.generateAppUuid() : json_data.app_uuid;
         }
         catch (e) {
-            console.log(e);
+            throw new Error('App id could not be read');
         }
         return uuid;
     };
+    /**
+     * Synchronously sets a new session token and stores it in the local cred loadFile
+     * @param  {string} session token
+     * @return {boolean} was_successfull
+     */
     AuthService.setSessionToken = function (token) {
-        //TODO: outsource session token to database or encrypted file
         token = token.trim();
         try {
             if (token.length === 64) {
@@ -76,11 +86,13 @@ var AuthService = /** @class */ (function () {
                 return true;
             }
         }
-        catch (e) {
-            console.log(e);
-        }
+        catch (e) { }
         return false;
     };
+    /**
+     * Synchronously Reads the current session token fromt the local cred file
+     * @return {string|null} session_token
+     **/
     AuthService.getSessionToken = function () {
         try {
             var data = fs_1["default"].readFileSync(storage_1["default"].cred_path, 'utf8');
@@ -91,6 +103,10 @@ var AuthService = /** @class */ (function () {
         catch (e) { }
         return null;
     };
+    /**
+     * Synchronously reads the current user uuid from the local cred file
+     * @return {string|null} user_uuid
+     */
     AuthService.getUserUuid = function () {
         try {
             var data = fs_1["default"].readFileSync(storage_1["default"].cred_path, 'utf8');
@@ -100,12 +116,48 @@ var AuthService = /** @class */ (function () {
         catch (e) { }
         return null;
     };
+    /**
+     * Synchronously sets the new user uuid and stores it in the local cred file
+     * @param {string} user_uuid
+     * @return {boolean} was_successfull
+     */
     AuthService.setUserUuid = function (uuid) {
         if (validator_1["default"].isUUID(uuid)) {
             try {
                 var data = fs_1["default"].readFileSync(storage_1["default"].cred_path, 'utf8');
                 var cred_data = JSON.parse(data);
                 cred_data.u_uuid = uuid;
+                fs_1["default"].writeFileSync(storage_1["default"].cred_path, JSON.stringify(cred_data));
+                return true;
+            }
+            catch (e) { }
+        }
+        return false;
+    };
+    /**
+     * Synchronously reads the stored username from the local cred file
+     * @return {string|null} username
+     */
+    AuthService.getUsername = function () {
+        try {
+            var data = fs_1["default"].readFileSync(storage_1["default"].cred_path, 'utf8');
+            var cred_data = JSON.parse(data);
+            return cred_data.username;
+        }
+        catch (e) { }
+        return null;
+    };
+    /**
+     * Sets the new username and stores it in the local cred file
+     * @param {string} username
+     * @return {boolean} was_successfull
+     */
+    AuthService.setUsername = function (username) {
+        if (username.length > 0) {
+            try {
+                var data = fs_1["default"].readFileSync(storage_1["default"].cred_path, 'utf8');
+                var cred_data = JSON.parse(data);
+                cred_data.username = username.trim();
                 fs_1["default"].writeFileSync(storage_1["default"].cred_path, JSON.stringify(cred_data));
                 return true;
             }

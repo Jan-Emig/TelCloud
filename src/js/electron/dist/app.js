@@ -52,6 +52,14 @@ app.on('ready', function () {
     if (!auth_1["default"].getAppUuid()) {
         auth_1["default"].generateAppUuid();
     }
+    var authCheck = function () {
+        auth_1["default"].checkAuthentication(function (is_authenticated) {
+            if (!is_authenticated)
+                sign_in_window_1["default"]();
+            else
+                explorer_window_1["default"]();
+        });
+    };
     internetAvailable({
         timeout: 5000,
         retries: 5
@@ -61,16 +69,11 @@ app.on('ready', function () {
             .then(function (res) {
             if (res.data === 'pong') {
                 // Check if user is already signed in (according to the server)
-                auth_1["default"].checkAuthentication(function (is_authenticated) {
-                    if (!is_authenticated)
-                        sign_in_window_1["default"]();
-                    else
-                        explorer_window_1["default"]();
-                });
+                authCheck();
             }
             else
-                no_connection_window_1["default"]();
-        })["catch"](function () { return no_connection_window_1["default"](); });
+                no_connection_window_1["default"](authCheck);
+        })["catch"](function () { return no_connection_window_1["default"](authCheck); });
     })["catch"](no_connection_window_1["default"]);
     /**
      * IPC Event Handlers
