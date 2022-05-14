@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { Helper } from "../helpers/helper";
+import Helper from "../helpers/global_helper";
 import crypto from 'crypto';
 import AuthService from "./services/auth";
 import no_connection_window from "./windows/no_connection_window";
@@ -34,14 +34,12 @@ app.on('ready', () => {
     .then(() => {
         axios.get(Helper.buildRequestUrl('ping'))
         .then((res: AxiosResponse) => {
-            if (res.data === 'pong') {
-                // Check if user is already signed in (according to the server)
-                authCheck();
-            } else no_connection_window(authCheck);
+            if (res.data === 'pong') authCheck(); //Check if user is already signed in (according to the server)
+            else no_connection_window(authCheck);
         })
         .catch(() => no_connection_window(authCheck));
     })
-    .catch(no_connection_window);
+    .catch(() => no_connection_window(authCheck));
 
     /**
      * IPC Event Handlers
@@ -57,14 +55,14 @@ app.on('ready', () => {
     ipcMain.handle('show-sign-in-window', (e: IpcMainInvokeEvent, has_signed_up: boolean = false) => {
         const win = BrowserWindow.fromWebContents(e.sender);
         if (has_signed_up) console.log('User has just signed up!');
-        if (win) win.close();
         sign_in_window(has_signed_up);
+        if (win) win.close();
     })
 
     ipcMain.handle('show-sign-up-window', (e: IpcMainInvokeEvent) => {
         const win = BrowserWindow.fromWebContents(e.sender);
-        if (win) win.close();
         sign_up_window();
+        if (win) win.close();
     })
 
     ipcMain.handle('sign-in', async(event: IpcMainInvokeEvent, token: string, user_uuid: string, username: string) => {
@@ -73,7 +71,20 @@ app.on('ready', () => {
         if (username) AuthService.setUsername(username);
         const webContents = event.sender;
         const win = BrowserWindow.fromWebContents(webContents);
-        win?.close();
         explorer_window();
+        win?.close();
+    })
+
+    ipcMain.handleOnce('quit-app', async() => {
+        app.quit()
+    })
+
+    ipcMain.handle('log-out', async(event: IpcMainInvokeEvent) => {
+        AuthService.logOut(() => {
+            const webContents = event.sender;
+            const win = BrowserWindow.fromWebContents(webContents);
+            win?.close();
+            sign_in_window();
+        })
     })
 });

@@ -15,7 +15,7 @@ const sign_in_window = (has_signed_up: boolean = false) => {
     
     sign_in_win.loadFile('../sign_in.html');
     sign_in_win.webContents.setWindowOpenHandler(({ url } : { url: string })  => {
-        if (url.startsWith('https://github.com/')) {
+        if (url.startsWith('https://githubs.com/')) {
             shell.openExternal(url);
             return { action: 'deny' };
         }
@@ -27,6 +27,14 @@ const sign_in_window = (has_signed_up: boolean = false) => {
     ipcMain.handle('get-username', async() => AuthService.getUsername());
 
     ipcMain.handle('has-signed-up', async() => has_signed_up);
+
+
+    // Window cleanup on close
+    sign_in_win.on('closed', () => {
+        ipcMain.removeHandler('set-session-token');
+        ipcMain.removeHandler('get-username');
+        ipcMain.removeHandler('has-signed-up');
+    })
 
 }
 

@@ -3,7 +3,7 @@ import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, Al
 import * as wifiAnimation from '../../../json/wifi_lottie.json';
 import Lottie from 'react-lottie-player';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { Helper } from '../../helpers/helper';
+import Helper from '../../helpers/global_helper';
 
 interface INetworkErrorDialog {
     setHasReconnected: Dispatch<SetStateAction<boolean>>,

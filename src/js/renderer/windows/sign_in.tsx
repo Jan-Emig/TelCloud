@@ -1,9 +1,9 @@
 import { Box, Button, Center, ChakraProvider, FormControl, FormErrorMessage, Heading, Image, Input, InputGroup, InputRightElement, Link, Text } from '@chakra-ui/react';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import React, { FC, FormEvent, KeyboardEvent, useEffect, useState, MouseEvent } from 'react';
+import React, { FC, FormEvent, KeyboardEvent, useEffect, useState, MouseEvent, ChangeEventHandler } from 'react';
 import ReactDOM from 'react-dom';
 import NetworkErrorDialog from '../comps/network_error_dialog';
-import { Helper } from '../../helpers/helper';
+import Helper from '../../helpers/global_helper';
 import MotionAlert from '../comps/motion_alert';
 import Lottie from 'react-lottie-player';
 import FormHelper from '../helpers/form_helper';
@@ -178,8 +178,8 @@ const SignIn: FC = () => {
                                 id="username"
                                 type="text"
                                 placeholder="Username"
-                                onChange={(e) => handleInputChange(e, 'username')} 
-                                onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, signIn)}
+                                onChange={(e: any) => handleInputChange(e, 'username')} 
+                                onKeyDown={(e: any) => FormHelper.handleFormKeySubmit(e, signIn)}
                             />
                             <FormErrorMessage>{ usernameErrorMessage }</FormErrorMessage>
                         </FormControl>
@@ -189,8 +189,8 @@ const SignIn: FC = () => {
                                     id="password"
                                     type={(showPassword) ? 'text' : "password"}
                                     placeholder="Password"
-                                    onChange={(e) => handleInputChange(e, 'password')}
-                                    onKeyDown={(e) => FormHelper.handleFormKeySubmit(e, signIn)}
+                                    onChange={(e: any) => handleInputChange(e, 'password')}
+                                    onKeyDown={(e: any) => FormHelper.handleFormKeySubmit(e, signIn)}
                                 />
                                 <InputRightElement>
                                     <Button height="30px" width="30px" mr="10px" onClick={() => setShowPassword(!showPassword)}>
@@ -270,7 +270,7 @@ const SignIn: FC = () => {
                     </Heading>
                 </Center>
                 { 
-                    isNetworkErrorDialogRequested && <NetworkErrorDialog setHasReconnected={setHasReconnected} setIsNetworkErrorDialogRequested={setIsNetworkErrorDialogRequested} />
+                    isNetworkErrorDialogRequested && false && <NetworkErrorDialog setHasReconnected={setHasReconnected} setIsNetworkErrorDialogRequested={setIsNetworkErrorDialogRequested} />
                 }
                 { 
                     hasReconnected &&

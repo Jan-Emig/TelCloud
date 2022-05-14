@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { BrowserWindow } from "electron";
-import { Helper } from "../../helpers/helper";
+import Helper from "../../helpers/global_helper";
 import sign_in_window from "./sign_in_window";
 
 const internetAvailable = require('internet-available');
@@ -27,8 +27,8 @@ const no_connection_window = (authCheck: Function) => {
             .then((res: AxiosResponse) => {
                 if (res.data === 'pong') {
                     clearInterval(reconnect_interval);
-                    win.close();
                     authCheck();
+                    win.close();
                 }
             });
         });

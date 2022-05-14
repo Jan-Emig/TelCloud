@@ -41,7 +41,7 @@ var axios_1 = require("axios");
 var react_2 = require("react");
 var react_dom_1 = require("react-dom");
 var network_error_dialog_1 = require("../comps/network_error_dialog");
-var helper_1 = require("../../helpers/helper");
+var global_helper_1 = require("../../helpers/global_helper");
 var motion_alert_1 = require("../comps/motion_alert");
 var form_helper_1 = require("../helpers/form_helper");
 window.api.getAppUuid().then(function (uuid) {
@@ -128,7 +128,7 @@ var SignIn = function () {
                 setisButtonDisabled(true);
                 if (hasSignInFailed)
                     setHasSignInFailed(false);
-                axios_1["default"].post(helper_1.Helper.buildRequestUrl('signin'), { username: username, password: password })
+                axios_1["default"].post(global_helper_1["default"].buildRequestUrl('signin'), { username: username, password: password })
                     .then(function (res) {
                     var res_data = res.data;
                     if ((res_data === null || res_data === void 0 ? void 0 : res_data.s_token.length) > 0 && (res_data === null || res_data === void 0 ? void 0 : res_data.u_uuid.length) > 0) {
@@ -241,7 +241,7 @@ var SignIn = function () {
                     react_2["default"].createElement(react_1.Text, { display: "inline", onClick: function () { return setHeartCounter(heartCounter + 1); } }, "\uD83D\uDC99"),
                     "\u00A0\u00A0by ",
                     react_2["default"].createElement(react_1.Link, { href: "https://github.com/Jan-Emig", isExternal: true }, "Jan-Emig"))),
-            isNetworkErrorDialogRequested && react_2["default"].createElement(network_error_dialog_1["default"], { setHasReconnected: setHasReconnected, setIsNetworkErrorDialogRequested: setIsNetworkErrorDialogRequested }),
+            isNetworkErrorDialogRequested && false && react_2["default"].createElement(network_error_dialog_1["default"], { setHasReconnected: setHasReconnected, setIsNetworkErrorDialogRequested: setIsNetworkErrorDialogRequested }),
             hasReconnected &&
                 react_2["default"].createElement(motion_alert_1["default"], { alertType: 'success', alertMessage: 'Successfully reconnected. Fire on!', width: '330px', setShowElement: setHasReconnected }),
             hasSignedUp &&

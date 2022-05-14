@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { motion, VariantLabels } from "framer-motion";
 import React, { FC, FormEvent, useState, MouseEvent, SetStateAction, Dispatch, KeyboardEvent, useEffect, createRef, useRef, RefObject, ChangeEvent } from "react";
 import ReactDOM from "react-dom";
-import { Helper } from "../../helpers/helper";
+import Helper from "../../helpers/global_helper";
 import FormHelper from '../helpers/form_helper';
 import zxcvbn from 'zxcvbn';
 

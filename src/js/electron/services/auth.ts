@@ -2,26 +2,42 @@ import axios, { AxiosResponse } from "axios";
 import fs from 'fs';
 import { randomUUID } from 'crypto';
 import validator from 'validator';
-import { Helper } from "../../helpers/helper";
+import Helper from "../../helpers/global_helper";
 import ICredentialFile from "../../renderer/types/ICredentialFile";
 import StorageService from "./storage";
 
 export default class AuthService {
 
+    /**
+     * Checks if the account credentials are still valid and sets a new session token
+     * @param {(boolean): void} callback
+     */
     public static checkAuthentication(callback: { (is_authenticated: boolean): void }): void {
-        axios.get(Helper.buildRequestUrl('auth-check'), { 
-            params: { 
-                s_token: this.getSessionToken(), 
-                app_uuid: this.getAppUuid(),
-                u_uuid: this.getUserUuid()
-            }
-        })
+        axios.get(Helper.buildRequestUrl('auth-check'), { params: {
+            s_token: AuthService.getSessionToken(), 
+            app_uuid: AuthService.getAppUuid(),
+            u_uuid: AuthService.getUserUuid()
+        } })
         .then((res: AxiosResponse) => {
             if (res.status === 200 && res.data.length) {
                 const s_token = res.data;
                 this.setSessionToken(s_token);
                 callback(true);
             }
+        })
+        .catch(() => callback(false));
+    }
+
+    /**
+     * Logs user out by generating a new session token and redirecting the user to the sign in window 
+     */
+    public static logOut(callback: { (success: boolean): void }): void {
+        axios.post(Helper.buildRequestUrl('log-out'), {s_token: AuthService.getSessionToken(), 
+            app_uuid: AuthService.getAppUuid(),
+            u_uuid: AuthService.getUserUuid()})
+        .then((res: AxiosResponse) => {
+            if (res.status === 200) callback(true);
+            callback(false);
         })
         .catch(() => callback(false));
     }
